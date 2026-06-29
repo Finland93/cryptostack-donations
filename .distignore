@@ -1,0 +1,17 @@
+# Anything here is excluded from the WordPress.org SVN deploy / release zip.
+/.git
+/.github
+/node_modules
+/.gitignore
+/.distignore
+/.editorconfig
+/phpcs.xml.dist
+/package.json
+/package-lock.json
+/vite.config.js
+/README.md
+/CONTRIBUTING.md
+/CHANGELOG.md
+/CODE_OF_CONDUCT.md
+/SECURITY.md
+.DS_Store
