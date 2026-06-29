@@ -32,7 +32,7 @@ jobs:
             ./ dist/cryptostack-donations/
           cd dist && zip -rq cryptostack-donations.zip cryptostack-donations
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: dist/cryptostack-donations.zip
           generate_release_notes: true
