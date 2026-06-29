@@ -1,0 +1,15 @@
+version: 2
+updates:
+  # npm packages used to build the wallet bundle (Reown AppKit, Solana, etc.)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
+  # GitHub Actions used in the workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies"]

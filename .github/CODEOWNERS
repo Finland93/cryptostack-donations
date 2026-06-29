@@ -1,0 +1,4 @@
+# Default owner for everything in this repo.
+# Requires review from @Finland93 on pull requests (when "Require review from
+# Code Owners" is enabled in the branch ruleset).
+* @Finland93
