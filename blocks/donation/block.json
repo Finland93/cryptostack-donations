@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "cryptostack/donation",
+	"version": "0.1.0",
+	"title": "Crypto Donation",
+	"category": "widgets",
+	"icon": "money-alt",
+	"description": "A non-custodial crypto donation button (Bitcoin, Ethereum, Solana and more) powered by WalletConnect / Reown.",
+	"keywords": [ "crypto", "donation", "bitcoin", "ethereum", "solana", "walletconnect", "donate" ],
+	"textdomain": "cryptostack-donations",
+	"supports": {
+		"html": false,
+		"reusable": true,
+		"multiple": true
+	},
+	"attributes": {
+		"amount": {
+			"type": "string",
+			"default": ""
+		},
+		"label": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"editorScript": "csd-block"
+}
