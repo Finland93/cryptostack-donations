@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       CryptoStack Donations - Bitcoin, Ethereum & Solana Donate Button (WalletConnect)
+ * Plugin Name:       CryptoStack Donations
  * Plugin URI:        https://github.com/Finland93/cryptostack-donations
  * Description:        Accept crypto donations on Ethereum/EVM, Solana and Bitcoin with one WalletConnect button. No smart contracts, no middleman, non-custodial. Gutenberg block, shortcode and sidebar widget.
  * Version:           0.1.0

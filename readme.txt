@@ -1,4 +1,4 @@
-=== CryptoStack Donations - Bitcoin, Ethereum & Solana Donate Button (WalletConnect) ===
+=== CryptoStack Donations ===
 Contributors: finland93
 Tags: crypto donations, bitcoin, ethereum, solana, walletconnect
 Requires at least: 6.4
