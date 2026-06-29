@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460" role="img" aria-label="CryptoStack Donations widget preview in light and dark themes">
+  <defs>
+    <linearGradient id="acc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6d28d9"/><stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="accD" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <style>.f{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}</style>
+  </defs>
+
+  <rect width="900" height="460" fill="#f1f0ec"/>
+
+  <!-- LIGHT CARD -->
+  <g transform="translate(60,50)">
+    <rect width="360" height="360" rx="14" fill="#ffffff" stroke="#e4e7ef"/>
+    <!-- labels + fields -->
+    <text class="f" x="24" y="42" fill="#64748b" font-size="11" font-weight="700" letter-spacing="0.5">NETWORK</text>
+    <rect x="24" y="50" width="150" height="40" rx="10" fill="#f7f8fc" stroke="#e4e7ef"/>
+    <text class="f" x="38" y="75" fill="#0f172a" font-size="14">Base</text>
+    <path d="M158 67 l5 5 5-5" stroke="#64748b" stroke-width="2" fill="none"/>
+
+    <text class="f" x="186" y="42" fill="#64748b" font-size="11" font-weight="700" letter-spacing="0.5">ASSET</text>
+    <rect x="186" y="50" width="150" height="40" rx="10" fill="#f7f8fc" stroke="#e4e7ef"/>
+    <text class="f" x="200" y="75" fill="#0f172a" font-size="14">USDC</text>
+    <path d="M320 67 l5 5 5-5" stroke="#64748b" stroke-width="2" fill="none"/>
+
+    <text class="f" x="24" y="122" fill="#64748b" font-size="11" font-weight="700" letter-spacing="0.5">AMOUNT</text>
+    <rect x="24" y="130" width="312" height="40" rx="10" fill="#f7f8fc" stroke="#e4e7ef"/>
+    <text class="f" x="38" y="155" fill="#64748b" font-size="14">0.00</text>
+
+    <rect x="24" y="186" width="312" height="40" rx="10" fill="#ffffff" stroke="#6d28d9" stroke-opacity="0.45"/>
+    <text class="f" x="180" y="211" fill="#6d28d9" font-size="14" font-weight="700" text-anchor="middle">Connect wallet</text>
+
+    <rect x="24" y="240" width="312" height="46" rx="10" fill="url(#acc)"/>
+    <text class="f" x="180" y="269" fill="#ffffff" font-size="16" font-weight="800" text-anchor="middle">Donate</text>
+  </g>
+  <text class="f" x="240" y="438" fill="#6b7280" font-size="13" text-anchor="middle">Light theme</text>
+
+  <!-- DARK CARD -->
+  <g transform="translate(480,50)">
+    <rect width="360" height="360" rx="14" fill="#161f33" stroke="#2c3a57"/>
+    <text class="f" x="24" y="42" fill="#a6b4cd" font-size="11" font-weight="700" letter-spacing="0.5">NETWORK</text>
+    <rect x="24" y="50" width="150" height="40" rx="10" fill="#1f2c46" stroke="#2c3a57"/>
+    <text class="f" x="38" y="75" fill="#eef2f9" font-size="14">Solana</text>
+    <path d="M158 67 l5 5 5-5" stroke="#a6b4cd" stroke-width="2" fill="none"/>
+
+    <text class="f" x="186" y="42" fill="#a6b4cd" font-size="11" font-weight="700" letter-spacing="0.5">ASSET</text>
+    <rect x="186" y="50" width="150" height="40" rx="10" fill="#1f2c46" stroke="#2c3a57"/>
+    <text class="f" x="200" y="75" fill="#eef2f9" font-size="14">SOL</text>
+    <path d="M320 67 l5 5 5-5" stroke="#a6b4cd" stroke-width="2" fill="none"/>
+
+    <text class="f" x="24" y="122" fill="#a6b4cd" font-size="11" font-weight="700" letter-spacing="0.5">AMOUNT</text>
+    <rect x="24" y="130" width="312" height="40" rx="10" fill="#1f2c46" stroke="#2c3a57"/>
+    <text class="f" x="38" y="155" fill="#eef2f9" font-size="14">25</text>
+
+    <rect x="24" y="186" width="312" height="40" rx="10" fill="#0f2a1c" stroke="#2c3a57"/>
+    <circle cx="120" cy="206" r="5" fill="#22c55e"/>
+    <text class="f" x="136" y="211" fill="#eef2f9" font-size="14" font-weight="600">0x15a3…0D80 · Disconnect</text>
+
+    <rect x="24" y="240" width="312" height="46" rx="10" fill="url(#accD)"/>
+    <text class="f" x="180" y="269" fill="#ffffff" font-size="16" font-weight="800" text-anchor="middle">Donate</text>
+  </g>
+  <text class="f" x="660" y="438" fill="#6b7280" font-size="13" text-anchor="middle">Dark theme · wallet connected</text>
+</svg>

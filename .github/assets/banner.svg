@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="CryptoStack Donations — multi-chain crypto donations for WordPress">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="sol" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9945FF"/>
+      <stop offset="1" stop-color="#14F195"/>
+    </linearGradient>
+    <style>
+      .t { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="320" rx="20" fill="url(#bg)"/>
+
+  <!-- soft accent glow -->
+  <circle cx="1080" cy="80" r="220" fill="url(#accent)" opacity="0.12"/>
+  <circle cx="1180" cy="280" r="160" fill="#14F195" opacity="0.07"/>
+
+  <!-- Title -->
+  <text class="t" x="72" y="132" fill="#ffffff" font-size="58" font-weight="800">CryptoStack Donations</text>
+  <text class="t" x="74" y="180" fill="#c4b5fd" font-size="26" font-weight="600">Multi-chain crypto donations for WordPress</text>
+
+  <!-- Chain pills -->
+  <g class="t" font-size="20" font-weight="700">
+    <g transform="translate(74,214)">
+      <rect width="148" height="44" rx="22" fill="#0b1424" stroke="#2c3a57"/>
+      <circle cx="26" cy="22" r="13" fill="#F7931A"/>
+      <text x="26" y="28" fill="#ffffff" font-size="16" font-weight="800" text-anchor="middle">₿</text>
+      <text x="50" y="29" fill="#e8edf6">Bitcoin</text>
+    </g>
+    <g transform="translate(238,214)">
+      <rect width="160" height="44" rx="22" fill="#0b1424" stroke="#2c3a57"/>
+      <circle cx="26" cy="22" r="13" fill="#627EEA"/>
+      <text x="26" y="28" fill="#ffffff" font-size="16" font-weight="800" text-anchor="middle">Ξ</text>
+      <text x="50" y="29" fill="#e8edf6">Ethereum</text>
+    </g>
+    <g transform="translate(414,214)">
+      <rect width="140" height="44" rx="22" fill="#0b1424" stroke="#2c3a57"/>
+      <circle cx="26" cy="22" r="13" fill="url(#sol)"/>
+      <text x="26" y="28" fill="#ffffff" font-size="15" font-weight="800" text-anchor="middle">◎</text>
+      <text x="50" y="29" fill="#e8edf6">Solana</text>
+    </g>
+  </g>
+
+  <!-- Tagline strip -->
+  <text class="t" x="74" y="292" fill="#94a3b8" font-size="18" font-weight="500">No smart contracts &#160;·&#160; Non-custodial &#160;·&#160; WalletConnect &#160;·&#160; Block, shortcode &amp; widget</text>
+
+  <!-- Right emblem -->
+  <g transform="translate(980,70)">
+    <rect width="220" height="180" rx="22" fill="#161f33" stroke="#2c3a57"/>
+    <rect x="24" y="28" width="172" height="20" rx="6" fill="#1f2c46"/>
+    <rect x="24" y="64" width="172" height="20" rx="6" fill="#1f2c46"/>
+    <rect x="24" y="104" width="172" height="44" rx="10" fill="url(#accent)"/>
+    <text class="t" x="110" y="132" fill="#ffffff" font-size="18" font-weight="800" text-anchor="middle">Donate</text>
+  </g>
+</svg>
