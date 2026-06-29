@@ -98,9 +98,7 @@ The fee funds development of the free plugin. You can choose whether it comes ou
 
 == Screenshots ==
 
-1. The donation button as it appears on the front end.
-2. The connect-and-donate modal with network and asset selection.
-3. The settings screen, including recipient wallets and the security lock.
+1. The inline donation widget in light and dark themes.
 
 == Changelog ==
 
