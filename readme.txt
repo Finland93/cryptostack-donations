@@ -1,5 +1,5 @@
 === CryptoStack Donations ===
-Contributors: finland93
+Contributors: axndata
 Tags: crypto donations, bitcoin, ethereum, solana, walletconnect
 Requires at least: 6.4
 Tested up to: 7.0
