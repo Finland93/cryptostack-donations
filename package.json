@@ -1,0 +1,24 @@
+{
+  "name": "cryptostack-donations",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Build tooling for the CryptoStack Donations WordPress plugin. Bundles the Reown AppKit (WalletConnect) wrapper into build/appkit-bundle.js so the plugin ships with no runtime CDN dependency (required by WordPress.org). The committed build/appkit-bundle.js was produced with the exact versions pinned below; you only need this if you want to rebuild.",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch"
+  },
+  "dependencies": {
+    "@reown/appkit": "1.8.21",
+    "@reown/appkit-adapter-ethers": "1.8.21",
+    "@reown/appkit-adapter-solana": "1.8.21",
+    "@reown/appkit-adapter-bitcoin": "1.8.21",
+    "@solana/spl-token": "0.4.14",
+    "@solana/web3.js": "1.98.4",
+    "ethers": "6.17.0"
+  },
+  "devDependencies": {
+    "vite": "5.4.21",
+    "vite-plugin-node-polyfills": "0.28.0"
+  }
+}
