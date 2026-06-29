@@ -1,0 +1,54 @@
+name: Bug report
+description: Report a problem with the plugin
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug! Please do **not** include private keys, seed phrases, or full wallet addresses you don't want public.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+      placeholder: When I click Donate on Solana, ...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Select network ...
+        3. Click Donate
+        4. See error
+    validations:
+      required: true
+  - type: input
+    id: chain
+    attributes:
+      label: Network / wallet
+      placeholder: "Base + MetaMask, or Solana + Phantom, etc."
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console errors
+      description: Open DevTools → Console and paste any errors (remove anything sensitive).
+      render: shell
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      placeholder: "Plugin 0.1.0, WordPress 7.0, PHP 8.2"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I set a Reown Project ID and added my domain to the Reown dashboard allow-list.
+          required: true
+        - label: I searched existing issues.
+          required: true
