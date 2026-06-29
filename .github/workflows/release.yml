@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - name: Assemble plugin zip
+        run: |
+          mkdir -p dist/cryptostack-donations
+          rsync -a \
+            --exclude='.git' --exclude='.github' --exclude='node_modules' \
+            --exclude='dist' --exclude='.gitignore' --exclude='.distignore' \
+            --exclude='.editorconfig' --exclude='phpcs.xml.dist' \
+            --exclude='package.json' --exclude='package-lock.json' \
+            --exclude='vite.config.js' --exclude='README.md' \
+            --exclude='CONTRIBUTING.md' --exclude='CHANGELOG.md' \
+            --exclude='CODE_OF_CONDUCT.md' --exclude='SECURITY.md' \
+            ./ dist/cryptostack-donations/
+          cd dist && zip -rq cryptostack-donations.zip cryptostack-donations
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/cryptostack-donations.zip
+          generate_release_notes: true
