@@ -1,0 +1,346 @@
+/**
+ * CryptoStack Donations — inline widget styles (front end) + a few admin tweaks.
+ *
+ * No external dependencies, no web fonts. Everything is scoped under .csd-* so it
+ * won't leak into the host theme. Light / dark / auto via data-theme on the
+ * widget element. The donation form renders inline inside the widget — there is
+ * no popup/overlay (the wallet's own modal handles connection).
+ */
+
+/* ------------------------------------------------------------------ *
+ * Design tokens (light defaults).
+ * ------------------------------------------------------------------ */
+.csd-widget {
+	--csd-bg: #ffffff;
+	--csd-fg: #0f172a;
+	--csd-muted: #64748b;
+	--csd-border: #e4e7ef;
+	--csd-field-bg: #f7f8fc;
+	--csd-accent: #6d28d9;
+	--csd-accent-2: #8b5cf6;
+	--csd-accent-fg: #ffffff;
+	--csd-ok: #15803d;
+	--csd-ok-bg: #f0fdf4;
+	--csd-err: #b91c1c;
+	--csd-err-bg: #fef2f2;
+	--csd-ok-dot: #22c55e;
+	--csd-radius: 14px;
+	--csd-radius-sm: 10px;
+	--csd-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	color: var(--csd-fg);
+	max-width: 380px;
+	box-sizing: border-box;
+}
+
+.csd-widget *,
+.csd-widget *::before,
+.csd-widget *::after {
+	box-sizing: border-box;
+}
+
+.csd-widget[data-theme="dark"] {
+	--csd-bg: #161f33;
+	--csd-fg: #eef2f9;
+	--csd-muted: #a6b4cd;
+	--csd-border: #2c3a57;
+	--csd-field-bg: #1f2c46;
+	--csd-accent: #8b5cf6;
+	--csd-accent-2: #a78bfa;
+	--csd-accent-fg: #ffffff;
+	--csd-ok: #4ade80;
+	--csd-ok-bg: #07291a;
+	--csd-err: #fca5a5;
+	--csd-err-bg: #2f1212;
+	--csd-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+
+@media (prefers-color-scheme: dark) {
+	.csd-widget[data-theme="auto"] {
+		--csd-bg: #161f33;
+		--csd-fg: #eef2f9;
+		--csd-muted: #a6b4cd;
+		--csd-border: #2c3a57;
+		--csd-field-bg: #1f2c46;
+		--csd-accent: #8b5cf6;
+		--csd-accent-2: #a78bfa;
+		--csd-accent-fg: #ffffff;
+		--csd-ok: #4ade80;
+		--csd-ok-bg: #07291a;
+		--csd-err: #fca5a5;
+		--csd-err-bg: #2f1212;
+		--csd-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+	}
+}
+
+/* ------------------------------------------------------------------ *
+ * Card.
+ * ------------------------------------------------------------------ */
+.csd-card {
+	background: var(--csd-bg);
+	border: 1px solid var(--csd-border);
+	border-radius: var(--csd-radius);
+	box-shadow: var(--csd-shadow);
+	padding: 18px;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+/* Network + asset sit side by side; a hidden one lets the other fill the row. */
+.csd-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.csd-grid > .csd-field {
+	flex: 1 1 140px;
+	min-width: 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * Fields.
+ * ------------------------------------------------------------------ */
+.csd-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin: 0;
+}
+
+.csd-label {
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	text-transform: uppercase;
+	color: var(--csd-muted);
+}
+
+.csd-select,
+.csd-input {
+	width: 100%;
+	height: 44px;
+	padding: 0 12px;
+	font-size: 15px;
+	color: var(--csd-fg);
+	background: var(--csd-field-bg);
+	border: 1px solid var(--csd-border);
+	border-radius: var(--csd-radius-sm);
+	appearance: none;
+	-webkit-appearance: none;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.csd-select {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M6 8 0 2l1.4-1.4L6 5.2 10.6.6 12 2z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	padding-right: 32px;
+	cursor: pointer;
+}
+
+.csd-input::placeholder {
+	color: var(--csd-muted);
+	opacity: 1;
+}
+
+.csd-select:focus,
+.csd-input:focus {
+	outline: none;
+	border-color: var(--csd-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--csd-accent) 22%, transparent);
+}
+
+/* ------------------------------------------------------------------ *
+ * Wallet connect/disconnect button (full width; reflects state).
+ * ------------------------------------------------------------------ */
+.csd-wallet-btn {
+	width: 100%;
+	height: 44px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 0 14px;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--csd-accent);
+	background: transparent;
+	border: 1px solid color-mix(in srgb, var(--csd-accent) 45%, transparent);
+	border-radius: var(--csd-radius-sm);
+	cursor: pointer;
+	transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.csd-wallet-btn:hover {
+	background: color-mix(in srgb, var(--csd-accent) 10%, transparent);
+}
+
+.csd-wallet-btn[data-connected="true"] {
+	color: var(--csd-fg);
+	border-color: var(--csd-border);
+	background: color-mix(in srgb, var(--csd-ok-dot) 8%, transparent);
+}
+
+.csd-wallet-btn[data-connected="true"]::before {
+	content: "";
+	flex: 0 0 auto;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--csd-ok-dot);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--csd-ok-dot) 25%, transparent);
+}
+
+/* ------------------------------------------------------------------ *
+ * Donate button.
+ * ------------------------------------------------------------------ */
+.csd-donate-btn {
+	width: 100%;
+	height: 48px;
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--csd-accent-fg);
+	background: linear-gradient(135deg, var(--csd-accent), var(--csd-accent-2));
+	border: 0;
+	border-radius: var(--csd-radius-sm);
+	cursor: pointer;
+	transition: filter 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
+	box-shadow: 0 4px 14px color-mix(in srgb, var(--csd-accent) 35%, transparent);
+}
+
+.csd-donate-btn:hover {
+	filter: brightness(1.06);
+}
+
+.csd-donate-btn:active {
+	transform: translateY(1px);
+}
+
+.csd-donate-btn:disabled {
+	opacity: 0.65;
+	cursor: progress;
+	box-shadow: none;
+}
+
+/* ------------------------------------------------------------------ *
+ * Status + notes.
+ * ------------------------------------------------------------------ */
+.csd-status {
+	font-size: 14px;
+	min-height: 0;
+}
+
+.csd-status:empty {
+	display: none;
+}
+
+.csd-status--busy {
+	color: var(--csd-muted);
+}
+
+.csd-status--ok {
+	padding: 10px 12px;
+	border-radius: var(--csd-radius-sm);
+	color: var(--csd-ok);
+	background: var(--csd-ok-bg);
+}
+
+.csd-status--err {
+	padding: 10px 12px;
+	border-radius: var(--csd-radius-sm);
+	color: var(--csd-err);
+	background: var(--csd-err-bg);
+}
+
+.csd-txlink {
+	color: inherit;
+	font-weight: 700;
+	text-decoration: underline;
+}
+
+.csd-hint {
+	margin: 6px 0 0;
+	font-size: 12px;
+	color: var(--csd-muted);
+}
+
+.csd-fee-note {
+	margin: 0;
+	font-size: 12px;
+	color: var(--csd-muted);
+	text-align: center;
+}
+
+/* Admin-only placeholder when nothing is configured yet. */
+.csd-empty {
+	padding: 12px 14px;
+	font-size: 13px;
+	color: var(--csd-muted);
+	border: 1px dashed var(--csd-border);
+	border-radius: var(--csd-radius);
+	background: transparent;
+}
+
+/* ------------------------------------------------------------------ *
+ * Loading skeleton (shown before JS swaps in the live form).
+ * ------------------------------------------------------------------ */
+.csd-skeleton {
+	border-radius: var(--csd-radius-sm);
+	background: linear-gradient(
+		90deg,
+		color-mix(in srgb, var(--csd-muted) 12%, transparent) 25%,
+		color-mix(in srgb, var(--csd-muted) 20%, transparent) 37%,
+		color-mix(in srgb, var(--csd-muted) 12%, transparent) 63%
+	);
+	background-size: 400% 100%;
+	animation: csd-shimmer 1.4s ease infinite;
+}
+
+.csd-skeleton--row {
+	height: 44px;
+}
+
+.csd-skeleton--input {
+	height: 44px;
+}
+
+@keyframes csd-shimmer {
+	0% { background-position: 100% 0; }
+	100% { background-position: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.csd-skeleton {
+		animation: none;
+	}
+}
+
+/* ------------------------------------------------------------------ *
+ * Admin settings page tweaks (loaded only on our settings screen).
+ * ------------------------------------------------------------------ */
+.csd-settings .csd-lock-hint {
+	margin: 8px 0 0;
+	padding: 8px 12px;
+	border-left: 3px solid #2271b1;
+	background: #f0f6fc;
+	font-size: 13px;
+}
+
+.csd-settings input.code.csd-invalid {
+	border-color: #d63638;
+	box-shadow: 0 0 0 1px #d63638;
+}
+
+.csd-settings .csd-field-warning {
+	display: block;
+	margin-top: 4px;
+	color: #d63638;
+	font-size: 12px;
+}
