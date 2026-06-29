@@ -547,11 +547,12 @@ class CSD_Settings {
 	 * @return string|false Raw bytes or false.
 	 */
 	private static function base58_decode( $input ) {
-		$alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-		$base     = 58;
-		$decoded  = '0';
+		$alphabet  = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+		$base      = 58;
+		$decoded   = '0';
+		$input_len = strlen( $input );
 
-		for ( $i = 0, $len = strlen( $input ); $i < $len; $i++ ) {
+		for ( $i = 0; $i < $input_len; $i++ ) {
 			$pos = strpos( $alphabet, $input[ $i ] );
 			if ( false === $pos ) {
 				return false;
@@ -567,7 +568,7 @@ class CSD_Settings {
 		}
 
 		// Restore leading zero bytes (each leading '1' is a 0x00 byte).
-		for ( $i = 0; $i < strlen( $input ) && '1' === $input[ $i ]; $i++ ) {
+		for ( $i = 0; $i < $input_len && '1' === $input[ $i ]; $i++ ) {
 			$hex = "\x00" . $hex;
 		}
 
