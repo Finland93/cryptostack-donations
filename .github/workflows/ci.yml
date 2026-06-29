@@ -36,11 +36,21 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build
-      - name: Run Plugin Check
+      - name: Assemble distributable plugin (mirror the release zip)
+        run: |
+          mkdir -p dist/cryptostack-donations
+          rsync -a \
+            --exclude-from='.distignore' \
+            --exclude='/.wordpress-org' \
+            --exclude='/.vite' \
+            --exclude='/dist' \
+            ./ dist/cryptostack-donations/
+          echo "=== Files that will ship ==="
+          find dist/cryptostack-donations -type f | sort
+      - name: Run Plugin Check on the distributable plugin
         uses: wordpress/plugin-check-action@v1
         with:
-          build-dir: '.'
-          exclude-directories: 'node_modules'
+          build-dir: dist/cryptostack-donations
 
   build:
     name: Build wallet bundle

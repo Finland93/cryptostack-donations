@@ -1,13 +1,17 @@
 name: Deploy to WordPress.org
 
-# Pushes a tagged release to the WordPress.org SVN repository.
+# Pushes the plugin to the WordPress.org SVN repository.
 # Requires repo secrets SVN_USERNAME and SVN_PASSWORD (your WP.org account),
-# and that the plugin has been approved on WordPress.org first.
+# and that the plugin has ALREADY been approved on WordPress.org.
 # Store listing assets (icon, banner, screenshots) live in .wordpress-org/.
+#
+# Trigger is manual (workflow_dispatch) on purpose: do NOT run this until the
+# plugin is approved and the secrets are set, otherwise it will fail because the
+# SVN repo does not exist yet. After approval, run it from the Actions tab, or
+# switch the trigger below to `release: types: [published]` for auto-deploys.
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
 
 jobs:
   deploy:
