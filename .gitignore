@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build caches
+.vite/
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Local env
+.env
+.env.*
+
+# Do NOT ignore build/appkit-bundle.js — it is committed and shipped in releases.
