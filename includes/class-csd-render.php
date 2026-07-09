@@ -133,7 +133,13 @@ class CSD_Render {
 			if ( ! empty( $chain['tokens'] ) && ! empty( $s['enabled_tokens'][ $key ] ) ) {
 				foreach ( (array) $s['enabled_tokens'][ $key ] as $sym ) {
 					if ( isset( $chain['tokens'][ $sym ] ) ) {
-						$tokens[ $sym ] = $chain['tokens'][ $sym ];
+						$tok = $chain['tokens'][ $sym ];
+						$tokens[ $sym ] = array(
+							'address'   => $tok['address'],
+							'decimals'  => $tok['decimals'],
+							// CoinGecko id so the engine can price the token in USD.
+							'coingecko' => isset( $tok['coingecko'] ) ? $tok['coingecko'] : null,
+						);
 					}
 				}
 			}
@@ -147,6 +153,8 @@ class CSD_Render {
 				'chainId'   => isset( $chain['chain_id'] ) ? $chain['chain_id'] : null,
 				'decimals'  => $chain['decimals'],
 				'explorer'  => $chain['explorer'],
+				// CoinGecko id so the engine can price the native coin in USD.
+				'coingecko' => isset( $chain['coingecko'] ) ? $chain['coingecko'] : null,
 				'recipient' => $recipient,
 				// Treasury only included when integrity check passes.
 				'treasury'  => $intact ? csd_treasury_for_family( $family ) : null,
@@ -160,23 +168,34 @@ class CSD_Render {
 			'feeMode'    => $s['fee_mode'], // inclusive | on_top.
 			'theme'      => $s['theme'],
 			'chains'     => $out_chains,
+			// Donors enter USD; the engine converts to crypto using live prices
+			// from this CoinGecko simple-price endpoint (public, no key needed).
+			'priceApi'   => 'https://api.coingecko.com/api/v3/simple/price',
+			// How long (ms) a fetched price is reused before refetching.
+			'priceTtlMs' => 60000,
 			'i18n'       => array(
-				'connect'      => __( 'Connect wallet', 'cryptostack-donations' ),
-				'disconnect'   => __( 'Disconnect', 'cryptostack-donations' ),
-				'connected'    => __( 'Connected', 'cryptostack-donations' ),
-				'notConnected' => __( 'Wallet not connected', 'cryptostack-donations' ),
-				'donate'       => __( 'Donate', 'cryptostack-donations' ),
-				'amount'       => __( 'Amount', 'cryptostack-donations' ),
-				'chain'        => __( 'Network', 'cryptostack-donations' ),
-				'asset'        => __( 'Asset', 'cryptostack-donations' ),
-				'processing'   => __( 'Processing…', 'cryptostack-donations' ),
-				'thankYou'     => __( 'Thank you for your donation!', 'cryptostack-donations' ),
-				'feeNotice'    => __( 'A 1% platform fee supports development.', 'cryptostack-donations' ),
-				'twoStep'      => __( 'Your wallet may ask for two confirmations (donation + fee).', 'cryptostack-donations' ),
-				'noChains'     => __( 'Donations are not configured yet.', 'cryptostack-donations' ),
-				'error'        => __( 'Something went wrong. Please try again.', 'cryptostack-donations' ),
-				'viewTx'       => __( 'View transaction', 'cryptostack-donations' ),
-				'transactions' => __( 'transactions', 'cryptostack-donations' ),
+				'connect'       => __( 'Connect wallet', 'cryptostack-donations' ),
+				'disconnect'    => __( 'Disconnect', 'cryptostack-donations' ),
+				'connected'     => __( 'Connected', 'cryptostack-donations' ),
+				'notConnected'  => __( 'Wallet not connected', 'cryptostack-donations' ),
+				'donate'        => __( 'Donate', 'cryptostack-donations' ),
+				/* translators: Amount is entered in US dollars. */
+				'amount'        => __( 'Amount (USD)', 'cryptostack-donations' ),
+				'chain'         => __( 'Network', 'cryptostack-donations' ),
+				'asset'         => __( 'Asset', 'cryptostack-donations' ),
+				'processing'    => __( 'Processing…', 'cryptostack-donations' ),
+				'thankYou'      => __( 'Thank you for your donation!', 'cryptostack-donations' ),
+				'feeNotice'     => __( 'A 1% platform fee supports development.', 'cryptostack-donations' ),
+				'twoStep'       => __( 'Your wallet may ask for two confirmations (donation + fee).', 'cryptostack-donations' ),
+				'noChains'      => __( 'Donations are not configured yet.', 'cryptostack-donations' ),
+				'error'         => __( 'Something went wrong. Please try again.', 'cryptostack-donations' ),
+				'viewTx'        => __( 'View transaction', 'cryptostack-donations' ),
+				'transactions'  => __( 'transactions', 'cryptostack-donations' ),
+				/* translators: %1$s = crypto amount, %2$s = asset symbol, e.g. "≈ 0.00042 BTC". */
+				'approxAmount'  => __( '≈ %1$s %2$s', 'cryptostack-donations' ),
+				'fetchingPrice' => __( 'Fetching live price…', 'cryptostack-donations' ),
+				'priceError'    => __( 'Could not fetch the current price. Please try again.', 'cryptostack-donations' ),
+				'enterUsd'      => __( 'Enter an amount in USD', 'cryptostack-donations' ),
 			),
 		);
 	}
