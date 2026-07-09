@@ -87,6 +87,110 @@
 	}
 
 	/**
+	 * Convert a USD amount into the smallest units of an asset, given the
+	 * asset's USD price and its decimals.
+	 *
+	 * The donor always enters USD. We divide by the unit price to get a human
+	 * decimal crypto amount, then scale into integer base units. We compute at
+	 * high precision using BigInt (never floats) to avoid rounding drift:
+	 *
+	 *   units = round( usd / price * 10^decimals )
+	 *         = round( usd * 10^decimals / price )
+	 *
+	 * @param {string|number} usd      Amount in USD (decimal).
+	 * @param {number}        price    Asset price in USD per 1 whole unit.
+	 * @param {number}        decimals Asset decimals.
+	 * @returns {bigint} Amount in smallest units.
+	 */
+	function usdToUnits( usd, price, decimals ) {
+		if ( ! ( price > 0 ) ) {
+			throw new Error( 'Invalid price' );
+		}
+		// Work in fixed-point: represent USD and price with PREC extra digits
+		// so integer division keeps precision, then round to base units.
+		var PREC = 12;
+		var usdScaled   = parseUnits( String( usd ), PREC );                       // usd * 10^PREC
+		var priceScaled = parseUnits( String( price ), PREC );                     // price * 10^PREC
+		if ( priceScaled <= 0n ) {
+			throw new Error( 'Invalid price' );
+		}
+		// units = usd * 10^decimals / price
+		//       = (usdScaled * 10^decimals) / priceScaled   (the 10^PREC cancels)
+		var scale     = 10n ** BigInt( decimals );
+		var numerator = usdScaled * scale;
+		// Round to nearest by adding half the divisor before dividing.
+		return ( numerator + priceScaled / 2n ) / priceScaled;
+	}
+
+	/* ------------------------------------------------------------------ *
+	 * Live USD pricing. Donors enter USD; we fetch the asset's USD price
+	 * from CoinGecko (public, keyless) and cache it briefly.
+	 * ------------------------------------------------------------------ */
+
+	var priceCache = {}; // id -> { price: number, ts: number }
+
+	/**
+	 * Resolve the CoinGecko id used to price a selection in USD.
+	 *
+	 * @param {object} chain Chain config.
+	 * @param {object|null} token Token config or null for native.
+	 * @returns {string|null}
+	 */
+	function coingeckoIdFor( chain, token ) {
+		if ( token ) {
+			return token.coingecko || null;
+		}
+		return chain.coingecko || null;
+	}
+
+	/**
+	 * Fetch the USD price for a CoinGecko id, using a short-lived cache.
+	 *
+	 * @param {string} id CoinGecko id (e.g. "bitcoin").
+	 * @returns {Promise<number>} USD price per whole unit.
+	 */
+	async function fetchUsdPrice( id ) {
+		var ttl = CFG.priceTtlMs || 60000;
+		var now = Date.now();
+		var hit = priceCache[ id ];
+		if ( hit && ( now - hit.ts ) < ttl ) {
+			return hit.price;
+		}
+
+		var base = CFG.priceApi || 'https://api.coingecko.com/api/v3/simple/price';
+		var url  = base + '?ids=' + encodeURIComponent( id ) + '&vs_currencies=usd';
+
+		var resp = await fetch( url, { headers: { accept: 'application/json' } } );
+		if ( ! resp.ok ) {
+			throw new Error( CFG.i18n.priceError );
+		}
+		var data  = await resp.json();
+		var price = data && data[ id ] && data[ id ].usd;
+		if ( ! ( price > 0 ) ) {
+			throw new Error( CFG.i18n.priceError );
+		}
+		priceCache[ id ] = { price: price, ts: now };
+		return price;
+	}
+
+	/**
+	 * Get the USD price for a chain/token selection. Stablecoins that map to
+	 * a USD-pegged id still go through the feed, so a depegged price is
+	 * reflected accurately rather than assumed to be exactly 1.00.
+	 *
+	 * @param {object} chain Chain config.
+	 * @param {object|null} token Token or null for native.
+	 * @returns {Promise<number>}
+	 */
+	async function priceForSelection( chain, token ) {
+		var id = coingeckoIdFor( chain, token );
+		if ( ! id ) {
+			throw new Error( CFG.i18n.priceError );
+		}
+		return fetchUsdPrice( id );
+	}
+
+	/**
 	 * Compute the recipient and fee amounts from the donor's input.
 	 *
 	 * @param {bigint} entered Amount the donor typed, in smallest units.
@@ -353,9 +457,17 @@
 			decimals = token.decimals;
 		}
 
-		var entered = parseUnits( sel.amount, decimals );
+		// The donor enters USD. Reject non-positive input up front.
+		var usd = parseFloat( String( sel.amount == null ? '' : sel.amount ).replace( /,/g, '' ) );
+		if ( ! ( usd > 0 ) ) {
+			throw new Error( CFG.i18n.enterUsd );
+		}
+
+		// Fetch the live USD price and convert to the asset's smallest units.
+		var price   = await priceForSelection( chain, token );
+		var entered = usdToUnits( usd, price, decimals );
 		if ( entered <= 0n ) {
-			throw new Error( CFG.i18n.amount + '?' );
+			throw new Error( CFG.i18n.enterUsd );
 		}
 		var split = splitAmount( entered );
 
@@ -453,11 +565,17 @@
 			assetField.style.display = syms.length ? '' : 'none';
 		}
 
-		// Amount.
+		// Amount — entered in USD. A "$" adornment and a live "≈ crypto"
+		// estimate make it unambiguous that the figure is US dollars.
 		var amount = el( 'input', { class: 'csd-input csd-amount', type: 'text', inputmode: 'decimal', placeholder: '0.00' } );
 		var def = widget.getAttribute( 'data-default-amount' );
 		if ( def ) { amount.value = def; }
-		var amountField = field( i18n.amount, amount );
+		var amountWrap = el( 'div', { class: 'csd-amount-wrap' }, [
+			el( 'span', { class: 'csd-amount-prefix', 'aria-hidden': 'true', text: '$' } ),
+			amount,
+		] );
+		var estimate = el( 'div', { class: 'csd-estimate' } );
+		var amountField = field( i18n.amount, el( 'div', {}, [ amountWrap, estimate ] ) );
 
 		// Wallet connect/disconnect — one button that shows the current state.
 		var walletBtn = el( 'button', { class: 'csd-wallet-btn', type: 'button' } );
@@ -467,6 +585,58 @@
 		var status = el( 'div', { class: 'csd-status' } );
 
 		function currentChain() { return CFG.chains[ netSel.value ]; }
+
+		function currentToken() {
+			var ch = currentChain();
+			return assetSel.value ? ( ch.tokens || {} )[ assetSel.value ] : null;
+		}
+
+		function currentSymbol() {
+			var ch = currentChain();
+			return assetSel.value ? assetSel.value : ch.native;
+		}
+
+		// Live "≈ X BTC" estimate under the amount field. Debounced so typing
+		// doesn't spam the price API; results are cached in fetchUsdPrice.
+		var estTimer = null;
+		var estSeq   = 0;
+
+		function renderEstimate( text, cls ) {
+			estimate.className = 'csd-estimate' + ( cls ? ' ' + cls : '' );
+			estimate.textContent = text || '';
+		}
+
+		function updateEstimate() {
+			var usd = parseFloat( String( amount.value || '' ).replace( /,/g, '' ) );
+			if ( ! ( usd > 0 ) ) {
+				renderEstimate( '' );
+				return;
+			}
+			var ch    = currentChain();
+			var token = currentToken();
+			var sym   = currentSymbol();
+			var seq   = ++estSeq;
+			renderEstimate( i18n.fetchingPrice, 'csd-estimate--busy' );
+			priceForSelection( ch, token ).then( function ( price ) {
+				if ( seq !== estSeq ) { return; } // A newer update superseded us.
+				var decimals = token ? token.decimals : ch.decimals;
+				var units    = usdToUnits( usd, price, decimals );
+				var human    = formatUnits( units, decimals );
+				var tmpl     = i18n.approxAmount || '≈ %1$s %2$s';
+				renderEstimate( tmpl.replace( '%1$s', human ).replace( '%2$s', sym ), 'csd-estimate--ok' );
+			} ).catch( function () {
+				if ( seq !== estSeq ) { return; }
+				renderEstimate( i18n.priceError, 'csd-estimate--err' );
+			} );
+		}
+
+		function scheduleEstimate() {
+			if ( estTimer ) { clearTimeout( estTimer ); }
+			estTimer = setTimeout( updateEstimate, 350 );
+		}
+
+		amount.addEventListener( 'input', scheduleEstimate );
+		assetSel.addEventListener( 'change', updateEstimate );
 
 		function refreshWallet() {
 			var ch = currentChain();
@@ -487,6 +657,7 @@
 		netSel.addEventListener( 'change', function () {
 			refreshAssets();
 			refreshWallet();
+			updateEstimate();
 		} );
 
 		walletBtn.addEventListener( 'click', async function () {
@@ -547,6 +718,9 @@
 
 		refreshAssets();
 		refreshWallet();
+		if ( amount.value ) {
+			updateEstimate();
+		}
 
 		return card;
 	}
@@ -598,5 +772,5 @@
 	}
 
 	// Expose for debugging / programmatic use.
-	window.CSDDonate = { donate: donate, parseUnits: parseUnits, formatUnits: formatUnits, splitAmount: splitAmount };
+	window.CSDDonate = { donate: donate, parseUnits: parseUnits, formatUnits: formatUnits, splitAmount: splitAmount, usdToUnits: usdToUnits };
 } )();
