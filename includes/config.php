@@ -111,9 +111,11 @@ function csd_get_chains() {
 			'caip'     => 'eip155:1',
 			'decimals' => 18,
 			'explorer' => 'https://etherscan.io/tx/',
+			// CoinGecko id used to price the native coin in USD (client-side).
+			'coingecko' => 'ethereum',
 			'tokens'   => array(
-				'USDC' => array( 'address' => '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 'decimals' => 6 ),
-				'USDT' => array( 'address' => '0xdAC17F958D2ee523a2206206994597C13D831ec7', 'decimals' => 6 ),
+				'USDC' => array( 'address' => '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 'decimals' => 6, 'coingecko' => 'usd-coin' ),
+				'USDT' => array( 'address' => '0xdAC17F958D2ee523a2206206994597C13D831ec7', 'decimals' => 6, 'coingecko' => 'tether' ),
 			),
 		),
 		'polygon'  => array(
@@ -124,9 +126,10 @@ function csd_get_chains() {
 			'caip'     => 'eip155:137',
 			'decimals' => 18,
 			'explorer' => 'https://polygonscan.com/tx/',
+			'coingecko' => 'matic-network',
 			'tokens'   => array(
-				'USDC' => array( 'address' => '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359', 'decimals' => 6 ),
-				'USDT' => array( 'address' => '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', 'decimals' => 6 ),
+				'USDC' => array( 'address' => '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359', 'decimals' => 6, 'coingecko' => 'usd-coin' ),
+				'USDT' => array( 'address' => '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', 'decimals' => 6, 'coingecko' => 'tether' ),
 			),
 		),
 		'base'     => array(
@@ -137,8 +140,9 @@ function csd_get_chains() {
 			'caip'     => 'eip155:8453',
 			'decimals' => 18,
 			'explorer' => 'https://basescan.org/tx/',
+			'coingecko' => 'ethereum',
 			'tokens'   => array(
-				'USDC' => array( 'address' => '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'decimals' => 6 ),
+				'USDC' => array( 'address' => '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'decimals' => 6, 'coingecko' => 'usd-coin' ),
 			),
 		),
 		'bsc'      => array(
@@ -149,8 +153,9 @@ function csd_get_chains() {
 			'caip'     => 'eip155:56',
 			'decimals' => 18,
 			'explorer' => 'https://bscscan.com/tx/',
+			'coingecko' => 'binancecoin',
 			'tokens'   => array(
-				'USDT' => array( 'address' => '0x55d398326f99059fF775485246999027B3197955', 'decimals' => 18 ),
+				'USDT' => array( 'address' => '0x55d398326f99059fF775485246999027B3197955', 'decimals' => 18, 'coingecko' => 'tether' ),
 			),
 		),
 
@@ -162,9 +167,10 @@ function csd_get_chains() {
 			'caip'     => 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp', // Mainnet-beta.
 			'decimals' => 9,
 			'explorer' => 'https://solscan.io/tx/',
+			'coingecko' => 'solana',
 			'tokens'   => array(
-				'USDC' => array( 'address' => 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', 'decimals' => 6 ),
-				'USDT' => array( 'address' => 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', 'decimals' => 6 ),
+				'USDC' => array( 'address' => 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', 'decimals' => 6, 'coingecko' => 'usd-coin' ),
+				'USDT' => array( 'address' => 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB', 'decimals' => 6, 'coingecko' => 'tether' ),
 			),
 		),
 
@@ -176,6 +182,7 @@ function csd_get_chains() {
 			'caip'     => 'bip122:000000000019d6689c085ae165831e93',
 			'decimals' => 8,
 			'explorer' => 'https://mempool.space/tx/',
+			'coingecko' => 'bitcoin',
 			'tokens'   => array(), // No tokens on L1.
 		),
 	);
