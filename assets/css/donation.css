@@ -344,3 +344,48 @@
 	color: #d63638;
 	font-size: 12px;
 }
+
+/* ------------------------------------------------------------------ *
+ * USD amount adornment + live crypto estimate.
+ * Donors enter USD (shown with a "$" prefix); the estimate line shows
+ * the approximate crypto amount that will actually be sent.
+ * ------------------------------------------------------------------ */
+.csd-amount-wrap {
+	position: relative;
+}
+
+.csd-amount-wrap .csd-amount-prefix {
+	position: absolute;
+	left: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--csd-muted);
+	pointer-events: none;
+}
+
+.csd-amount-wrap .csd-input {
+	/* Leave room for the "$" prefix. */
+	padding-left: 26px;
+}
+
+.csd-estimate {
+	min-height: 16px;
+	margin-top: 6px;
+	font-size: 12px;
+	line-height: 1.4;
+	color: var(--csd-muted);
+}
+
+.csd-estimate--busy {
+	opacity: 0.8;
+}
+
+.csd-estimate--ok {
+	color: var(--csd-accent);
+}
+
+.csd-estimate--err {
+	color: #dc2626;
+}
