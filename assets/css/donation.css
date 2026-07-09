@@ -389,3 +389,106 @@
 .csd-estimate--err {
 	color: #dc2626;
 }
+
+/* ================================================================== *
+ * Dark-theme legibility hardening.
+ *
+ * Some host themes inject their own color onto inputs, selects and
+ * buttons with high specificity, which can force near-black text onto
+ * the dark card (AMOUNT field, CONNECT WALLET, DONATE). Native <option>
+ * lists also fall back to the OS/browser default (dark-on-dark) because
+ * the open dropdown is painted outside the widget's styles.
+ *
+ * The rules below re-assert the widget's own colors with enough weight
+ * to win, and explicitly color the option list. Scoped under .csd-widget
+ * so nothing leaks into the host theme.
+ * ================================================================== */
+
+/* Inputs & selects: force the widget foreground, beating theme bleed. */
+.csd-widget .csd-input,
+.csd-widget .csd-select,
+.csd-widget input.csd-input,
+.csd-widget select.csd-select {
+	color: var(--csd-fg) !important;
+	background-color: var(--csd-field-bg) !important;
+	-webkit-text-fill-color: var(--csd-fg); /* Safari/iOS honors this over color. */
+	opacity: 1;
+}
+
+/* The amount input specifically (it sits inside .csd-amount-wrap). */
+.csd-widget .csd-amount-wrap .csd-input {
+	color: var(--csd-fg) !important;
+	-webkit-text-fill-color: var(--csd-fg);
+}
+
+/* The "$" adornment in front of the USD amount. */
+.csd-widget .csd-amount-prefix {
+	color: var(--csd-fg);
+	-webkit-text-fill-color: var(--csd-fg);
+	opacity: 0.9;
+}
+
+/* Placeholder stays muted but visible in both themes. */
+.csd-widget .csd-input::placeholder {
+	color: var(--csd-muted) !important;
+	-webkit-text-fill-color: var(--csd-muted);
+	opacity: 1;
+}
+
+/* Native <option> list: the open dropdown is painted by the OS, so give
+ * it explicit colors or it defaults to dark-on-dark. Setting these on the
+ * select cascades to its options in most browsers; the option rules make
+ * it explicit for the rest. */
+.csd-widget .csd-select option,
+.csd-widget .csd-select optgroup {
+	color: var(--csd-fg);
+	background-color: var(--csd-bg);
+}
+
+/* Dark theme (explicit): make the option list unmistakably light text on
+ * a dark surface, matching the card. Covers data-theme="dark" and the
+ * auto theme under a dark OS preference. */
+.csd-widget[data-theme="dark"] .csd-select option,
+.csd-widget[data-theme="dark"] .csd-select optgroup {
+	color: #eef2f9;
+	background-color: #1f2c46;
+}
+
+@media (prefers-color-scheme: dark) {
+	.csd-widget[data-theme="auto"] .csd-select option,
+	.csd-widget[data-theme="auto"] .csd-select optgroup {
+		color: #eef2f9;
+		background-color: #1f2c46;
+	}
+}
+
+/* Wallet button: keep the accent-colored label readable and immune to
+ * theme text-color bleed. */
+.csd-widget .csd-wallet-btn {
+	color: var(--csd-accent) !important;
+	-webkit-text-fill-color: var(--csd-accent);
+}
+
+.csd-widget .csd-wallet-btn[data-connected="true"] {
+	color: var(--csd-fg) !important;
+	-webkit-text-fill-color: var(--csd-fg);
+}
+
+/* Donate button: its label must stay white on the accent gradient even if
+ * the host theme sets a dark button text color. */
+.csd-widget .csd-donate-btn {
+	color: var(--csd-accent-fg) !important;
+	-webkit-text-fill-color: var(--csd-accent-fg);
+}
+
+/* The dropdown chevron in the select is drawn as a background SVG in a
+ * fixed slate color; brighten it in dark mode so it doesn't vanish. */
+.csd-widget[data-theme="dark"] .csd-select {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a6b4cd' d='M6 8 0 2l1.4-1.4L6 5.2 10.6.6 12 2z'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+	.csd-widget[data-theme="auto"] .csd-select {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a6b4cd' d='M6 8 0 2l1.4-1.4L6 5.2 10.6.6 12 2z'/%3E%3C/svg%3E");
+	}
+}
