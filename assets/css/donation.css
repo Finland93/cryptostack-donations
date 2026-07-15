@@ -1,7 +1,7 @@
 /**
  * CryptoStack Donations — inline widget styles (front end) + a few admin tweaks.
  *
- * No external dependencies, no web fonts. Everything is scoped under .csd-* so it
+ * No external dependencies, no web fonts. Everything is scoped under .csdon-* so it
  * won't leak into the host theme. Light / dark / auto via data-theme on the
  * widget element. The donation form renders inline inside the widget — there is
  * no popup/overlay (the wallet's own modal handles connection).
@@ -10,79 +10,79 @@
 /* ------------------------------------------------------------------ *
  * Design tokens (light defaults).
  * ------------------------------------------------------------------ */
-.csd-widget {
-	--csd-bg: #ffffff;
-	--csd-fg: #0f172a;
-	--csd-muted: #64748b;
-	--csd-border: #e4e7ef;
-	--csd-field-bg: #f7f8fc;
-	--csd-accent: #6d28d9;
-	--csd-accent-2: #8b5cf6;
-	--csd-accent-fg: #ffffff;
-	--csd-ok: #15803d;
-	--csd-ok-bg: #f0fdf4;
-	--csd-err: #b91c1c;
-	--csd-err-bg: #fef2f2;
-	--csd-ok-dot: #22c55e;
-	--csd-radius: 14px;
-	--csd-radius-sm: 10px;
-	--csd-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+.csdon-widget {
+	--csdon-bg: #ffffff;
+	--csdon-fg: #0f172a;
+	--csdon-muted: #64748b;
+	--csdon-border: #e4e7ef;
+	--csdon-field-bg: #f7f8fc;
+	--csdon-accent: #6d28d9;
+	--csdon-accent-2: #8b5cf6;
+	--csdon-accent-fg: #ffffff;
+	--csdon-ok: #15803d;
+	--csdon-ok-bg: #f0fdf4;
+	--csdon-err: #b91c1c;
+	--csdon-err-bg: #fef2f2;
+	--csdon-ok-dot: #22c55e;
+	--csdon-radius: 14px;
+	--csdon-radius-sm: 10px;
+	--csdon-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
 
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
-	color: var(--csd-fg);
+	color: var(--csdon-fg);
 	max-width: 380px;
 	box-sizing: border-box;
 }
 
-.csd-widget *,
-.csd-widget *::before,
-.csd-widget *::after {
+.csdon-widget *,
+.csdon-widget *::before,
+.csdon-widget *::after {
 	box-sizing: border-box;
 }
 
-.csd-widget[data-theme="dark"] {
-	--csd-bg: #161f33;
-	--csd-fg: #eef2f9;
-	--csd-muted: #a6b4cd;
-	--csd-border: #2c3a57;
-	--csd-field-bg: #1f2c46;
-	--csd-accent: #8b5cf6;
-	--csd-accent-2: #a78bfa;
-	--csd-accent-fg: #ffffff;
-	--csd-ok: #4ade80;
-	--csd-ok-bg: #07291a;
-	--csd-err: #fca5a5;
-	--csd-err-bg: #2f1212;
-	--csd-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+.csdon-widget[data-theme="dark"] {
+	--csdon-bg: #161f33;
+	--csdon-fg: #eef2f9;
+	--csdon-muted: #a6b4cd;
+	--csdon-border: #2c3a57;
+	--csdon-field-bg: #1f2c46;
+	--csdon-accent: #8b5cf6;
+	--csdon-accent-2: #a78bfa;
+	--csdon-accent-fg: #ffffff;
+	--csdon-ok: #4ade80;
+	--csdon-ok-bg: #07291a;
+	--csdon-err: #fca5a5;
+	--csdon-err-bg: #2f1212;
+	--csdon-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
 }
 
 @media (prefers-color-scheme: dark) {
-	.csd-widget[data-theme="auto"] {
-		--csd-bg: #161f33;
-		--csd-fg: #eef2f9;
-		--csd-muted: #a6b4cd;
-		--csd-border: #2c3a57;
-		--csd-field-bg: #1f2c46;
-		--csd-accent: #8b5cf6;
-		--csd-accent-2: #a78bfa;
-		--csd-accent-fg: #ffffff;
-		--csd-ok: #4ade80;
-		--csd-ok-bg: #07291a;
-		--csd-err: #fca5a5;
-		--csd-err-bg: #2f1212;
-		--csd-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+	.csdon-widget[data-theme="auto"] {
+		--csdon-bg: #161f33;
+		--csdon-fg: #eef2f9;
+		--csdon-muted: #a6b4cd;
+		--csdon-border: #2c3a57;
+		--csdon-field-bg: #1f2c46;
+		--csdon-accent: #8b5cf6;
+		--csdon-accent-2: #a78bfa;
+		--csdon-accent-fg: #ffffff;
+		--csdon-ok: #4ade80;
+		--csdon-ok-bg: #07291a;
+		--csdon-err: #fca5a5;
+		--csdon-err-bg: #2f1212;
+		--csdon-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
 	}
 }
 
 /* ------------------------------------------------------------------ *
  * Card.
  * ------------------------------------------------------------------ */
-.csd-card {
-	background: var(--csd-bg);
-	border: 1px solid var(--csd-border);
-	border-radius: var(--csd-radius);
-	box-shadow: var(--csd-shadow);
+.csdon-card {
+	background: var(--csdon-bg);
+	border: 1px solid var(--csdon-border);
+	border-radius: var(--csdon-radius);
+	box-shadow: var(--csdon-shadow);
 	padding: 18px;
 	display: flex;
 	flex-direction: column;
@@ -90,13 +90,13 @@
 }
 
 /* Network + asset sit side by side; a hidden one lets the other fill the row. */
-.csd-grid {
+.csdon-grid {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 12px;
 }
 
-.csd-grid > .csd-field {
+.csdon-grid > .csdon-field {
 	flex: 1 1 140px;
 	min-width: 0;
 }
@@ -104,37 +104,37 @@
 /* ------------------------------------------------------------------ *
  * Fields.
  * ------------------------------------------------------------------ */
-.csd-field {
+.csdon-field {
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
 	margin: 0;
 }
 
-.csd-label {
+.csdon-label {
 	font-size: 12px;
 	font-weight: 600;
 	letter-spacing: 0.01em;
 	text-transform: uppercase;
-	color: var(--csd-muted);
+	color: var(--csdon-muted);
 }
 
-.csd-select,
-.csd-input {
+.csdon-select,
+.csdon-input {
 	width: 100%;
 	height: 44px;
 	padding: 0 12px;
 	font-size: 15px;
-	color: var(--csd-fg);
-	background: var(--csd-field-bg);
-	border: 1px solid var(--csd-border);
-	border-radius: var(--csd-radius-sm);
+	color: var(--csdon-fg);
+	background: var(--csdon-field-bg);
+	border: 1px solid var(--csdon-border);
+	border-radius: var(--csdon-radius-sm);
 	appearance: none;
 	-webkit-appearance: none;
 	transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.csd-select {
+.csdon-select {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M6 8 0 2l1.4-1.4L6 5.2 10.6.6 12 2z'/%3E%3C/svg%3E");
 	background-repeat: no-repeat;
 	background-position: right 12px center;
@@ -142,22 +142,22 @@
 	cursor: pointer;
 }
 
-.csd-input::placeholder {
-	color: var(--csd-muted);
+.csdon-input::placeholder {
+	color: var(--csdon-muted);
 	opacity: 1;
 }
 
-.csd-select:focus,
-.csd-input:focus {
+.csdon-select:focus,
+.csdon-input:focus {
 	outline: none;
-	border-color: var(--csd-accent);
-	box-shadow: 0 0 0 3px color-mix(in srgb, var(--csd-accent) 22%, transparent);
+	border-color: var(--csdon-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--csdon-accent) 22%, transparent);
 }
 
 /* ------------------------------------------------------------------ *
  * Wallet connect/disconnect button (full width; reflects state).
  * ------------------------------------------------------------------ */
-.csd-wallet-btn {
+.csdon-wallet-btn {
 	width: 100%;
 	height: 44px;
 	display: inline-flex;
@@ -167,10 +167,10 @@
 	padding: 0 14px;
 	font-size: 14px;
 	font-weight: 600;
-	color: var(--csd-accent);
+	color: var(--csdon-accent);
 	background: transparent;
-	border: 1px solid color-mix(in srgb, var(--csd-accent) 45%, transparent);
-	border-radius: var(--csd-radius-sm);
+	border: 1px solid color-mix(in srgb, var(--csdon-accent) 45%, transparent);
+	border-radius: var(--csdon-radius-sm);
 	cursor: pointer;
 	transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 	white-space: nowrap;
@@ -178,52 +178,52 @@
 	text-overflow: ellipsis;
 }
 
-.csd-wallet-btn:hover {
-	background: color-mix(in srgb, var(--csd-accent) 10%, transparent);
+.csdon-wallet-btn:hover {
+	background: color-mix(in srgb, var(--csdon-accent) 10%, transparent);
 }
 
-.csd-wallet-btn[data-connected="true"] {
-	color: var(--csd-fg);
-	border-color: var(--csd-border);
-	background: color-mix(in srgb, var(--csd-ok-dot) 8%, transparent);
+.csdon-wallet-btn[data-connected="true"] {
+	color: var(--csdon-fg);
+	border-color: var(--csdon-border);
+	background: color-mix(in srgb, var(--csdon-ok-dot) 8%, transparent);
 }
 
-.csd-wallet-btn[data-connected="true"]::before {
+.csdon-wallet-btn[data-connected="true"]::before {
 	content: "";
 	flex: 0 0 auto;
 	width: 8px;
 	height: 8px;
 	border-radius: 50%;
-	background: var(--csd-ok-dot);
-	box-shadow: 0 0 0 3px color-mix(in srgb, var(--csd-ok-dot) 25%, transparent);
+	background: var(--csdon-ok-dot);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--csdon-ok-dot) 25%, transparent);
 }
 
 /* ------------------------------------------------------------------ *
  * Donate button.
  * ------------------------------------------------------------------ */
-.csd-donate-btn {
+.csdon-donate-btn {
 	width: 100%;
 	height: 48px;
 	font-size: 16px;
 	font-weight: 700;
-	color: var(--csd-accent-fg);
-	background: linear-gradient(135deg, var(--csd-accent), var(--csd-accent-2));
+	color: var(--csdon-accent-fg);
+	background: linear-gradient(135deg, var(--csdon-accent), var(--csdon-accent-2));
 	border: 0;
-	border-radius: var(--csd-radius-sm);
+	border-radius: var(--csdon-radius-sm);
 	cursor: pointer;
 	transition: filter 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
-	box-shadow: 0 4px 14px color-mix(in srgb, var(--csd-accent) 35%, transparent);
+	box-shadow: 0 4px 14px color-mix(in srgb, var(--csdon-accent) 35%, transparent);
 }
 
-.csd-donate-btn:hover {
+.csdon-donate-btn:hover {
 	filter: brightness(1.06);
 }
 
-.csd-donate-btn:active {
+.csdon-donate-btn:active {
 	transform: translateY(1px);
 }
 
-.csd-donate-btn:disabled {
+.csdon-donate-btn:disabled {
 	opacity: 0.65;
 	cursor: progress;
 	box-shadow: none;
@@ -232,92 +232,92 @@
 /* ------------------------------------------------------------------ *
  * Status + notes.
  * ------------------------------------------------------------------ */
-.csd-status {
+.csdon-status {
 	font-size: 14px;
 	min-height: 0;
 }
 
-.csd-status:empty {
+.csdon-status:empty {
 	display: none;
 }
 
-.csd-status--busy {
-	color: var(--csd-muted);
+.csdon-status--busy {
+	color: var(--csdon-muted);
 }
 
-.csd-status--ok {
+.csdon-status--ok {
 	padding: 10px 12px;
-	border-radius: var(--csd-radius-sm);
-	color: var(--csd-ok);
-	background: var(--csd-ok-bg);
+	border-radius: var(--csdon-radius-sm);
+	color: var(--csdon-ok);
+	background: var(--csdon-ok-bg);
 }
 
-.csd-status--err {
+.csdon-status--err {
 	padding: 10px 12px;
-	border-radius: var(--csd-radius-sm);
-	color: var(--csd-err);
-	background: var(--csd-err-bg);
+	border-radius: var(--csdon-radius-sm);
+	color: var(--csdon-err);
+	background: var(--csdon-err-bg);
 }
 
-.csd-txlink {
+.csdon-txlink {
 	color: inherit;
 	font-weight: 700;
 	text-decoration: underline;
 }
 
-.csd-hint {
+.csdon-hint {
 	margin: 6px 0 0;
 	font-size: 12px;
-	color: var(--csd-muted);
+	color: var(--csdon-muted);
 }
 
-.csd-fee-note {
+.csdon-fee-note {
 	margin: 0;
 	font-size: 12px;
-	color: var(--csd-muted);
+	color: var(--csdon-muted);
 	text-align: center;
 }
 
 /* Admin-only placeholder when nothing is configured yet. */
-.csd-empty {
+.csdon-empty {
 	padding: 12px 14px;
 	font-size: 13px;
-	color: var(--csd-muted);
-	border: 1px dashed var(--csd-border);
-	border-radius: var(--csd-radius);
+	color: var(--csdon-muted);
+	border: 1px dashed var(--csdon-border);
+	border-radius: var(--csdon-radius);
 	background: transparent;
 }
 
 /* ------------------------------------------------------------------ *
  * Loading skeleton (shown before JS swaps in the live form).
  * ------------------------------------------------------------------ */
-.csd-skeleton {
-	border-radius: var(--csd-radius-sm);
+.csdon-skeleton {
+	border-radius: var(--csdon-radius-sm);
 	background: linear-gradient(
 		90deg,
-		color-mix(in srgb, var(--csd-muted) 12%, transparent) 25%,
-		color-mix(in srgb, var(--csd-muted) 20%, transparent) 37%,
-		color-mix(in srgb, var(--csd-muted) 12%, transparent) 63%
+		color-mix(in srgb, var(--csdon-muted) 12%, transparent) 25%,
+		color-mix(in srgb, var(--csdon-muted) 20%, transparent) 37%,
+		color-mix(in srgb, var(--csdon-muted) 12%, transparent) 63%
 	);
 	background-size: 400% 100%;
-	animation: csd-shimmer 1.4s ease infinite;
+	animation: csdon-shimmer 1.4s ease infinite;
 }
 
-.csd-skeleton--row {
+.csdon-skeleton--row {
 	height: 44px;
 }
 
-.csd-skeleton--input {
+.csdon-skeleton--input {
 	height: 44px;
 }
 
-@keyframes csd-shimmer {
+@keyframes csdon-shimmer {
 	0% { background-position: 100% 0; }
 	100% { background-position: 0 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.csd-skeleton {
+	.csdon-skeleton {
 		animation: none;
 	}
 }
@@ -325,7 +325,7 @@
 /* ------------------------------------------------------------------ *
  * Admin settings page tweaks (loaded only on our settings screen).
  * ------------------------------------------------------------------ */
-.csd-settings .csd-lock-hint {
+.csdon-settings .csdon-lock-hint {
 	margin: 8px 0 0;
 	padding: 8px 12px;
 	border-left: 3px solid #2271b1;
@@ -333,12 +333,12 @@
 	font-size: 13px;
 }
 
-.csd-settings input.code.csd-invalid {
+.csdon-settings input.code.csdon-invalid {
 	border-color: #d63638;
 	box-shadow: 0 0 0 1px #d63638;
 }
 
-.csd-settings .csd-field-warning {
+.csdon-settings .csdon-field-warning {
 	display: block;
 	margin-top: 4px;
 	color: #d63638;
@@ -350,43 +350,45 @@
  * Donors enter USD (shown with a "$" prefix); the estimate line shows
  * the approximate crypto amount that will actually be sent.
  * ------------------------------------------------------------------ */
-.csd-amount-wrap {
+.csdon-amount-wrap {
 	position: relative;
 }
 
-.csd-amount-wrap .csd-amount-prefix {
+.csdon-amount-wrap .csdon-amount-unit {
 	position: absolute;
-	left: 12px;
+	right: 12px;
 	top: 50%;
 	transform: translateY(-50%);
-	font-size: 15px;
+	font-size: 13px;
 	font-weight: 600;
-	color: var(--csd-muted);
+	color: var(--csdon-muted);
 	pointer-events: none;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
 }
 
-.csd-amount-wrap .csd-input {
-	/* Leave room for the "$" prefix. */
-	padding-left: 26px;
+.csdon-amount-wrap .csdon-input {
+	/* Leave room for the asset unit suffix (e.g. "BTC"). */
+	padding-right: 60px;
 }
 
-.csd-estimate {
+.csdon-estimate {
 	min-height: 16px;
 	margin-top: 6px;
 	font-size: 12px;
 	line-height: 1.4;
-	color: var(--csd-muted);
+	color: var(--csdon-muted);
 }
 
-.csd-estimate--busy {
+.csdon-estimate--busy {
 	opacity: 0.8;
 }
 
-.csd-estimate--ok {
-	color: var(--csd-accent);
+.csdon-estimate--ok {
+	color: var(--csdon-accent);
 }
 
-.csd-estimate--err {
+.csdon-estimate--err {
 	color: #dc2626;
 }
 
@@ -400,38 +402,38 @@
  * the open dropdown is painted outside the widget's styles.
  *
  * The rules below re-assert the widget's own colors with enough weight
- * to win, and explicitly color the option list. Scoped under .csd-widget
+ * to win, and explicitly color the option list. Scoped under .csdon-widget
  * so nothing leaks into the host theme.
  * ================================================================== */
 
 /* Inputs & selects: force the widget foreground, beating theme bleed. */
-.csd-widget .csd-input,
-.csd-widget .csd-select,
-.csd-widget input.csd-input,
-.csd-widget select.csd-select {
-	color: var(--csd-fg) !important;
-	background-color: var(--csd-field-bg) !important;
-	-webkit-text-fill-color: var(--csd-fg); /* Safari/iOS honors this over color. */
+.csdon-widget .csdon-input,
+.csdon-widget .csdon-select,
+.csdon-widget input.csdon-input,
+.csdon-widget select.csdon-select {
+	color: var(--csdon-fg) !important;
+	background-color: var(--csdon-field-bg) !important;
+	-webkit-text-fill-color: var(--csdon-fg); /* Safari/iOS honors this over color. */
 	opacity: 1;
 }
 
-/* The amount input specifically (it sits inside .csd-amount-wrap). */
-.csd-widget .csd-amount-wrap .csd-input {
-	color: var(--csd-fg) !important;
-	-webkit-text-fill-color: var(--csd-fg);
+/* The amount input specifically (it sits inside .csdon-amount-wrap). */
+.csdon-widget .csdon-amount-wrap .csdon-input {
+	color: var(--csdon-fg) !important;
+	-webkit-text-fill-color: var(--csdon-fg);
 }
 
-/* The "$" adornment in front of the USD amount. */
-.csd-widget .csd-amount-prefix {
-	color: var(--csd-fg);
-	-webkit-text-fill-color: var(--csd-fg);
+/* The asset unit suffix (e.g. "BTC") after the amount. */
+.csdon-widget .csdon-amount-unit {
+	color: var(--csdon-fg);
+	-webkit-text-fill-color: var(--csdon-fg);
 	opacity: 0.9;
 }
 
 /* Placeholder stays muted but visible in both themes. */
-.csd-widget .csd-input::placeholder {
-	color: var(--csd-muted) !important;
-	-webkit-text-fill-color: var(--csd-muted);
+.csdon-widget .csdon-input::placeholder {
+	color: var(--csdon-muted) !important;
+	-webkit-text-fill-color: var(--csdon-muted);
 	opacity: 1;
 }
 
@@ -439,24 +441,24 @@
  * it explicit colors or it defaults to dark-on-dark. Setting these on the
  * select cascades to its options in most browsers; the option rules make
  * it explicit for the rest. */
-.csd-widget .csd-select option,
-.csd-widget .csd-select optgroup {
-	color: var(--csd-fg);
-	background-color: var(--csd-bg);
+.csdon-widget .csdon-select option,
+.csdon-widget .csdon-select optgroup {
+	color: var(--csdon-fg);
+	background-color: var(--csdon-bg);
 }
 
 /* Dark theme (explicit): make the option list unmistakably light text on
  * a dark surface, matching the card. Covers data-theme="dark" and the
  * auto theme under a dark OS preference. */
-.csd-widget[data-theme="dark"] .csd-select option,
-.csd-widget[data-theme="dark"] .csd-select optgroup {
+.csdon-widget[data-theme="dark"] .csdon-select option,
+.csdon-widget[data-theme="dark"] .csdon-select optgroup {
 	color: #eef2f9;
 	background-color: #1f2c46;
 }
 
 @media (prefers-color-scheme: dark) {
-	.csd-widget[data-theme="auto"] .csd-select option,
-	.csd-widget[data-theme="auto"] .csd-select optgroup {
+	.csdon-widget[data-theme="auto"] .csdon-select option,
+	.csdon-widget[data-theme="auto"] .csdon-select optgroup {
 		color: #eef2f9;
 		background-color: #1f2c46;
 	}
@@ -464,31 +466,31 @@
 
 /* Wallet button: keep the accent-colored label readable and immune to
  * theme text-color bleed. */
-.csd-widget .csd-wallet-btn {
-	color: var(--csd-accent) !important;
-	-webkit-text-fill-color: var(--csd-accent);
+.csdon-widget .csdon-wallet-btn {
+	color: var(--csdon-accent) !important;
+	-webkit-text-fill-color: var(--csdon-accent);
 }
 
-.csd-widget .csd-wallet-btn[data-connected="true"] {
-	color: var(--csd-fg) !important;
-	-webkit-text-fill-color: var(--csd-fg);
+.csdon-widget .csdon-wallet-btn[data-connected="true"] {
+	color: var(--csdon-fg) !important;
+	-webkit-text-fill-color: var(--csdon-fg);
 }
 
 /* Donate button: its label must stay white on the accent gradient even if
  * the host theme sets a dark button text color. */
-.csd-widget .csd-donate-btn {
-	color: var(--csd-accent-fg) !important;
-	-webkit-text-fill-color: var(--csd-accent-fg);
+.csdon-widget .csdon-donate-btn {
+	color: var(--csdon-accent-fg) !important;
+	-webkit-text-fill-color: var(--csdon-accent-fg);
 }
 
 /* The dropdown chevron in the select is drawn as a background SVG in a
  * fixed slate color; brighten it in dark mode so it doesn't vanish. */
-.csd-widget[data-theme="dark"] .csd-select {
+.csdon-widget[data-theme="dark"] .csdon-select {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a6b4cd' d='M6 8 0 2l1.4-1.4L6 5.2 10.6.6 12 2z'/%3E%3C/svg%3E");
 }
 
 @media (prefers-color-scheme: dark) {
-	.csd-widget[data-theme="auto"] .csd-select {
+	.csdon-widget[data-theme="auto"] .csdon-select {
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a6b4cd' d='M6 8 0 2l1.4-1.4L6 5.2 10.6.6 12 2z'/%3E%3C/svg%3E");
 	}
 }
