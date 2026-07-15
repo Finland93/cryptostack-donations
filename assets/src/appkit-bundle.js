@@ -1,8 +1,8 @@
 /**
- * CSDAppKit — thin wrapper around Reown AppKit (WalletConnect) implementing
+ * CSDONAppKit — thin wrapper around Reown AppKit (WalletConnect) implementing
  * the contract the donation engine expects:
  *
- *   window.CSDAppKit = {
+ *   window.CSDONAppKit = {
  *     init({ projectId, chains, theme }): Promise<void>,
  *     open(): void,
  *     ensureConnected(family, caip): Promise<{ address }>,
@@ -48,7 +48,7 @@ let solanaConnection = null;
 
 const NETWORKS = [ mainnet, polygon, base, bsc, solana, bitcoinNet ];
 
-const CSDAppKit = {
+const CSDONAppKit = {
 
 	async init( { projectId, theme } ) {
 		if ( appkit ) {
@@ -285,13 +285,13 @@ const CSDAppKit = {
 		 *
 		 * Verified against @reown/appkit 1.8.x: the connector's sendTransfer
 		 * accepts a SINGLE { recipient, amount } (amount in satoshis, as a
-		 * string) and returns a txid string. To take the 1% fee we therefore
-		 * send TWO transactions (donation + fee) — the same two-step model as
-		 * the EVM fallback. The donor approves each in their wallet.
+		 * string) and returns a txid string. When an optional fee is enabled we
+		 * therefore send TWO transactions (donation + fee) — the same two-step
+		 * model as the EVM fallback. The donor approves each in their wallet.
 		 *
 		 * A single-signature, two-output PSBT is possible via the connector's
 		 * signPSBT method, but that requires manual UTXO selection and fee
-		 * estimation (e.g. bitcoinjs-lib). See README for that upgrade path.
+		 * estimation (e.g. bitcoinjs-lib). Not currently implemented.
 		 *
 		 * @param {{recipients: Array<{address:string, amountSats:string}>}} params
 		 * @returns {Promise<string[]>} One txid per output sent.
@@ -352,5 +352,5 @@ function waitForConnection( namespace, timeoutMs = 120000 ) {
 	} );
 }
 
-window.CSDAppKit = CSDAppKit;
-export default CSDAppKit;
+window.CSDONAppKit = CSDONAppKit;
+export default CSDONAppKit;
