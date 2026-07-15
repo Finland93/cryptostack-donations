@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Crypto Donation Plugin for WordPress | CryptoStack Donations</title>
+<meta name="description" content="Free, non-custodial crypto donation plugin for WordPress. Accept Bitcoin, Ethereum, Solana and USDC donations with one WalletConnect button. No smart contracts.">
+<link rel="canonical" href="https://finland93.github.io/cryptostack-donations/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CryptoStack Donations">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Crypto Donation Plugin for WordPress | CryptoStack Donations">
+<meta property="og:description" content="Free, non-custodial crypto donation plugin for WordPress. Accept Bitcoin, Ethereum, Solana and USDC donations with one WalletConnect button. No smart contracts.">
+<meta property="og:url" content="https://finland93.github.io/cryptostack-donations/">
+<meta property="og:image" content="https://raw.githubusercontent.com/Finland93/cryptostack-donations/main/.github/assets/preview.png">
+<meta property="og:image:width" content="900">
+<meta property="og:image:height" content="460">
+<meta property="og:image:alt" content="The CryptoStack Donations widget on a WordPress page, showing a network selector and a connect wallet button.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Crypto Donation Plugin for WordPress | CryptoStack Donations">
+<meta name="twitter:description" content="Accept Bitcoin, Ethereum and Solana donations on WordPress. Non-custodial, no smart contracts, free and open source.">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Finland93/cryptostack-donations/main/.github/assets/preview.png">
+
+<meta name="theme-color" content="#f5f2ea">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#f5f2ea; --paper-2:#efebe1; --paper-3:#e7e2d5;
+  --ink:#15120d; --ink-soft:#3c362b; --muted:#756d5d;
+  --rule:#d9d2c0; --rule-soft:#e4dece;
+  --btc:#c9741a; --eth:#4e57bd; --sol:#0d8a67; --stamp:#a3301c;
+  --measure:68ch;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}
+  *{animation:none!important;transition:none!important}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Newsreader",Georgia,"Times New Roman",serif;
+  font-size:19px;line-height:1.62;font-weight:380;
+  font-optical-sizing:auto;
+  -webkit-font-smoothing:antialiased;
+}
+/* paper grain */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:9;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.34'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+@media(max-width:700px){.wrap{padding:0 20px}}
+
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:var(--rule)}
+a:hover{text-decoration-color:var(--stamp)}
+:focus-visible{outline:2px solid var(--stamp);outline-offset:3px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:12px;top:12px;z-index:50;background:var(--ink);color:var(--paper);padding:10px 14px}
+
+/* ---------- type ---------- */
+h1,h2,h3{font-family:"Instrument Serif",Georgia,serif;font-weight:400;letter-spacing:-.012em;margin:0}
+h1{font-size:clamp(2.9rem,7.4vw,5.6rem);line-height:.98}
+h2{font-size:clamp(2rem,4vw,3.1rem);line-height:1.06;margin-bottom:.5em}
+h3{font-size:1.5rem;line-height:1.2}
+h1 em,h2 em{font-style:italic;color:var(--stamp)}
+p{margin:0 0 1.05em}
+.lede{font-size:clamp(1.16rem,2vw,1.45rem);line-height:1.5;color:var(--ink-soft);max-width:60ch}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:.7rem;font-weight:500;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;gap:14px;margin-bottom:1.4rem;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--rule)}
+.prose{max-width:var(--measure)}
+.prose p{margin-bottom:1.05em}
+strong{font-weight:600}
+
+/* ---------- header ---------- */
+.topbar{
+  position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(9px);border-bottom:1px solid var(--rule);
+}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;height:58px}
+.brand{font-family:"IBM Plex Mono",monospace;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;text-decoration:none}
+.brand span{color:var(--stamp)}
+.topnav{display:flex;gap:22px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+.topnav a{text-decoration:none;color:var(--muted)}
+.topnav a:hover{color:var(--ink)}
+@media(max-width:860px){.topnav{display:none}}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(56px,9vw,104px) 0 clamp(40px,5vw,64px);position:relative;overflow:hidden}
+.hero::after{
+  content:"";position:absolute;right:-14%;top:-28%;width:62vw;height:62vw;max-width:760px;max-height:760px;
+  background:radial-gradient(circle at 50% 50%,rgba(201,116,26,.11),rgba(78,87,189,.07) 42%,transparent 68%);
+  pointer-events:none;
+}
+.hero h1{margin-bottom:.42em;max-width:17ch;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.35fr .85fr;gap:clamp(28px,5vw,72px);align-items:end}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;align-items:start}}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:2rem}
+.btn{
+  font-family:"IBM Plex Mono",monospace;font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+  padding:14px 22px;text-decoration:none;border:1px solid var(--ink);display:inline-flex;align-items:center;gap:9px;
+  transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
+}
+.btn-primary{background:var(--ink);color:var(--paper);box-shadow:4px 4px 0 var(--rule)}
+.btn-primary:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--stamp)}
+.btn-ghost{background:transparent;color:var(--ink)}
+.btn-ghost:hover{background:var(--paper-3);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--rule)}
+.chains-inline{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:1.6rem}
+.chip{
+  font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--rule);padding:5px 10px;display:inline-flex;align-items:center;gap:7px;background:var(--paper-2);
+}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.d-btc{background:var(--btc)} .d-eth{background:var(--eth)} .d-sol{background:var(--sol)}
+
+/* fact card */
+.facts{border:1px solid var(--rule);background:var(--paper-2);padding:22px 24px}
+.facts dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:11px 18px;font-family:"IBM Plex Mono",monospace;font-size:.76rem}
+.facts dt{color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.facts dd{margin:0;text-align:right;font-weight:500}
+
+/* ---------- sections ---------- */
+section{padding:clamp(50px,6.5vw,86px) 0;border-top:1px solid var(--rule-soft)}
+section:first-of-type{border-top:none}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:clamp(26px,4vw,60px)}
+@media(max-width:860px){.two-col{grid-template-columns:1fr}}
+
+.aside{border-left:2px solid var(--stamp);padding:4px 0 4px 20px;margin:1.8em 0;color:var(--ink-soft);font-size:.96em}
+.aside .k{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--stamp);display:block;margin-bottom:.5em}
+
+/* steps */
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;padding:26px 0 26px 66px;border-bottom:1px solid var(--rule-soft);position:relative}
+.steps li:last-child{border-bottom:none}
+.steps li::before{
+  content:counter(s,decimal-leading-zero);position:absolute;left:0;top:26px;
+  font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--stamp);letter-spacing:.06em;
+  border:1px solid var(--rule);width:38px;height:38px;display:grid;place-items:center;background:var(--paper-2);
+}
+.steps h3{margin-bottom:.35em}
+.steps p{margin:0;color:var(--ink-soft);max-width:62ch}
+
+/* table */
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);background:var(--paper-2)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.92rem}
+caption{text-align:left;padding:16px 20px;font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule)}
+th,td{padding:13px 20px;text-align:left;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500}
+tbody th{font-weight:600;white-space:nowrap}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:none}
+td.mono,th.mono{font-family:"IBM Plex Mono",monospace;font-size:.82rem}
+
+/* code */
+pre{
+  margin:1.4em 0;padding:18px 20px;background:var(--ink);color:#e9e4d6;overflow-x:auto;
+  font-family:"IBM Plex Mono",monospace;font-size:.82rem;line-height:1.7;
+}
+pre .c{color:#9a927e}
+pre .s{color:#e0a86a}
+code{font-family:"IBM Plex Mono",monospace;font-size:.86em;background:var(--paper-3);padding:2px 6px;border:1px solid var(--rule-soft)}
+pre code{background:none;border:none;padding:0;font-size:1em;color:inherit}
+
+/* feature list */
+.feat{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.feat li{background:var(--paper);padding:24px}
+.feat h3{font-size:1.24rem;margin-bottom:.4em}
+.feat p{margin:0;font-size:.94rem;color:var(--ink-soft)}
+
+/* faq */
+.faq-item{border-bottom:1px solid var(--rule-soft);padding:26px 0}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{margin-bottom:.5em;font-size:1.42rem}
+.faq-item p{margin:0 0 .7em;color:var(--ink-soft);max-width:72ch}
+.faq-item p:last-child{margin-bottom:0}
+
+figure{margin:0 0 2rem}
+figure img{width:100%;height:auto;border:1px solid var(--rule);background:var(--paper-2);display:block}
+figcaption{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+
+footer{border-top:1px solid var(--rule);padding:52px 0 66px;background:var(--paper-2)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr}}
+footer h4{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 14px;font-weight:500}
+footer ul{list-style:none;margin:0;padding:0;font-size:.94rem}
+footer li{margin-bottom:8px}
+.colophon{margin-top:44px;padding-top:22px;border-top:1px solid var(--rule);font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:var(--muted);letter-spacing:.04em;line-height:1.9}
+
+/* load-in */
+@media (prefers-reduced-motion:no-preference){
+  .rise{animation:rise .8s cubic-bezier(.2,.7,.3,1) both}
+  .rise:nth-child(2){animation-delay:.07s}
+  .rise:nth-child(3){animation-delay:.14s}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#main">CryptoStack<span>·</span>Donations</a>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#networks">Networks</a>
+      <a href="#add">Add it</a>
+      <a href="#fee">Fee</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/Finland93/cryptostack-donations">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="rise">
+        <div class="chains-inline">
+          <span class="chip"><span class="dot d-btc"></span>Bitcoin</span>
+          <span class="chip"><span class="dot d-eth"></span>Ethereum &amp; EVM</span>
+          <span class="chip"><span class="dot d-sol"></span>Solana</span>
+        </div>
+        <h1>Crypto donations for WordPress, straight to <em>your own wallet</em>.</h1>
+        <p class="lede">CryptoStack Donations is a free, open-source crypto donation plugin for WordPress. Your visitors connect any WalletConnect-compatible wallet and send Bitcoin, Ethereum, Solana or stablecoins directly to the addresses you configure — no smart contract, no middleman, and no account holding your money.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://github.com/Finland93/cryptostack-donations">Get it on GitHub →</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+      </div>
+      <div class="facts rise">
+        <dl>
+          <dt>Licence</dt><dd>GPL-2.0-or-later</dd>
+          <dt>Price</dt><dd>Free</dd>
+          <dt>Custody</dt><dd>Non-custodial</dd>
+          <dt>Contracts</dt><dd>None</dd>
+          <dt>Networks</dt><dd>6</dd>
+          <dt>WordPress</dt><dd>6.4+</dd>
+          <dt>PHP</dt><dd>7.4+</dd>
+          <dt>Platform fee</dt><dd>1%</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WHAT IT IS (SoftwareApplication) ============ -->
+<section id="what" itemscope itemtype="https://schema.org/SoftwareApplication">
+  <meta itemprop="name" content="CryptoStack Donations">
+  <meta itemprop="alternateName" content="CryptoStack Donations – crypto donation plugin for WordPress">
+  <meta itemprop="applicationCategory" content="BusinessApplication">
+  <meta itemprop="applicationSubCategory" content="WordPress Plugin">
+  <meta itemprop="operatingSystem" content="WordPress 6.4+, PHP 7.4+">
+  <meta itemprop="softwareVersion" content="0.1.0">
+  <meta itemprop="license" content="https://www.gnu.org/licenses/gpl-2.0.html">
+  <meta itemprop="downloadUrl" content="https://github.com/Finland93/cryptostack-donations">
+  <meta itemprop="installUrl" content="https://github.com/Finland93/cryptostack-donations">
+  <meta itemprop="softwareRequirements" content="WordPress 6.4 or later, PHP 7.4 or later, a free WalletConnect Project ID from Reown">
+  <meta itemprop="image" content="https://raw.githubusercontent.com/Finland93/cryptostack-donations/main/.github/assets/preview.png">
+  <link itemprop="applicationSuite" href="https://wordpress.org/">
+  <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+    <meta itemprop="price" content="0">
+    <meta itemprop="priceCurrency" content="USD">
+    <link itemprop="availability" href="https://schema.org/InStock">
+    <meta itemprop="category" content="Free and open source">
+  </div>
+  <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+    <meta itemprop="name" content="Finland93">
+    <link itemprop="url" href="https://github.com/Finland93">
+  </div>
+
+  <div class="wrap">
+    <div class="eyebrow">01 — What it is</div>
+    <div class="two-col">
+      <div>
+        <h2>A donation plugin for WordPress that speaks <em>on-chain</em>.</h2>
+        <figure>
+          <img src="https://raw.githubusercontent.com/Finland93/cryptostack-donations/main/.github/assets/preview.png"
+               alt="The CryptoStack Donations widget rendered on a WordPress page: a network selector, an asset selector, an amount field and a connect wallet button."
+               width="900" height="460" loading="lazy" decoding="async">
+          <figcaption>The inline donation widget — no popup, no redirect</figcaption>
+        </figure>
+      </div>
+      <div class="prose">
+        <p>Most WordPress donation plugins are built for cards: they hand your donor to a payment processor, the processor holds the money, and you wait for a payout. <strong itemprop="description">CryptoStack Donations is different. It is a non-custodial cryptocurrency donation plugin for WordPress: it builds a blockchain transaction inside the donor's own browser, the donor signs it with their own wallet, and the funds land in your wallet directly.</strong></p>
+        <p>There is no server in the middle. There is no smart contract to audit or to trust. There is no account that can freeze, hold, or lose your donations. The plugin never sees a private key, because a private key never leaves the donor's wallet.</p>
+        <p>You add the donation form to any page as a Gutenberg block, a <code>[crypto_donate]</code> shortcode, or a classic sidebar widget. It renders inline, styled to fit your theme, in light or dark mode.</p>
+        <div class="aside">
+          <span class="k">In one sentence</span>
+          A free, open-source, non-custodial crypto donation plugin for WordPress that accepts Bitcoin, Ethereum, Polygon, Base, BNB Smart Chain and Solana — plus USDC and USDT — through one WalletConnect button.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NON-CUSTODIAL ============ -->
+<section id="custody">
+  <div class="wrap">
+    <div class="eyebrow">02 — Why non-custodial matters</div>
+    <h2>Nobody stands between you and the donation.</h2>
+    <div class="two-col">
+      <div class="prose">
+        <p>"Custody" is the single most important word in crypto fundraising, and it is the thing most people accepting crypto donations get wrong. It answers one question: <strong>at any point, does somebody else control your money?</strong></p>
+        <p><strong>Custodial</strong> is the common route. You point donors at an exchange account, a hosted payment page, or a service that generates addresses on your behalf. Those donations arrive somewhere that belongs to the service. You then ask for them. That works right up until the account is flagged, the service changes its terms, your region is restricted, a withdrawal is delayed, or the company simply stops existing. It also means a third party holds a record of every donation you receive.</p>
+        <p><strong>Non-custodial</strong> is what this plugin does. The donation transaction is constructed in the donor's browser and signed in the donor's wallet, addressed to <em>your</em> wallet. It settles on the blockchain. There is no intermediate account, so there is nothing to be frozen, no payout to wait for, and no withdrawal minimum. If this website disappeared tomorrow, the addresses you configured would keep working.</p>
+      </div>
+      <div class="prose">
+        <p>That property matters most to exactly the people who tend to reach for crypto donations first: independent journalists, open-source maintainers, small charities operating across borders, creators de-platformed by payment processors, and anyone whose work is legal but unpopular with a payment risk department.</p>
+        <p>It has an honest trade-off, and it should be said plainly: <strong>non-custodial means you are responsible.</strong> There is no support desk that can reverse a transaction, recover a lost seed phrase, or undo a mistyped address. Blockchain transfers are final. That is the price of nobody being able to stop them.</p>
+        <div class="aside">
+          <span class="k">Practical consequence</span>
+          Configure the plugin with addresses from a wallet whose recovery phrase you control and have backed up. Send one small test donation to yourself before you publish the page. Then lock the addresses in the settings.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how">
+  <div class="wrap">
+    <div class="eyebrow">03 — How it works</div>
+    <h2>From <em>Connect wallet</em> to settled, in four steps.</h2>
+    <ol class="steps">
+      <li>
+        <h3>The donor picks a network and an amount</h3>
+        <p>The widget shows only the networks you enabled. The donor chooses one — say Bitcoin, or Solana — then chooses the asset (the native coin, or a stablecoin such as USDC) and types an amount in that asset's own units. Nothing has been contacted yet; nothing has left the page.</p>
+      </li>
+      <li>
+        <h3>They connect their own wallet</h3>
+        <p>Pressing <em>Connect wallet</em> opens Reown AppKit, the WalletConnect interface. Hundreds of wallets work: MetaMask, Trust Wallet, Rainbow, Phantom, Coinbase Wallet, Ledger Live and the rest. On a phone it deep-links straight into the wallet app; on a desktop it shows a QR code. Only at this moment does anything talk to the network, and only because the donor asked it to.</p>
+      </li>
+      <li>
+        <h3>The plugin builds the transaction in the browser</h3>
+        <p>Using the address you configured, the plugin assembles a plain transfer — a native coin transfer, or an ERC-20 <code>transfer</code> call for an allow-listed stablecoin. It computes exact amounts in the smallest unit of the asset using integer arithmetic, so nothing is lost to floating-point rounding. It never asks for a token <code>approve</code> and never touches an arbitrary contract.</p>
+      </li>
+      <li>
+        <h3>The donor signs, and the chain settles it</h3>
+        <p>The wallet shows the donor exactly what they are about to sign, including every receiving address. They confirm. The transaction is broadcast to the public blockchain and the funds move to your wallet. The widget then shows a link to the transaction on a block explorer, so both of you can verify it independently.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ NETWORKS ============ -->
+<section id="networks">
+  <div class="wrap">
+    <div class="eyebrow">04 — Supported networks</div>
+    <h2>Six networks. Three ecosystems. One button.</h2>
+    <p class="lede" style="margin-bottom:2rem">Enable the ones you actually want. Each network needs one receiving address; all EVM chains share a single Ethereum-format address.</p>
+    <div class="tablewrap">
+      <table>
+        <caption>Networks and assets supported by the crypto donation widget</caption>
+        <thead>
+          <tr><th scope="col">Network</th><th scope="col">Native coin</th><th scope="col">Stablecoins</th><th scope="col">Address family</th><th scope="col">Wallet confirmations</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><span class="dot d-btc" style="display:inline-block;margin-right:8px"></span>Bitcoin</th><td class="mono">BTC</td><td>—</td><td>Native SegWit (bc1…)</td><td class="mono">2</td></tr>
+          <tr><th scope="row"><span class="dot d-eth" style="display:inline-block;margin-right:8px"></span>Ethereum</th><td class="mono">ETH</td><td class="mono">USDC, USDT</td><td>EVM (0x…)</td><td class="mono">1–2</td></tr>
+          <tr><th scope="row"><span class="dot d-eth" style="display:inline-block;margin-right:8px"></span>Polygon</th><td class="mono">POL</td><td class="mono">USDC, USDT</td><td>EVM (0x…)</td><td class="mono">1–2</td></tr>
+          <tr><th scope="row"><span class="dot d-eth" style="display:inline-block;margin-right:8px"></span>Base</th><td class="mono">ETH</td><td class="mono">USDC</td><td>EVM (0x…)</td><td class="mono">1–2</td></tr>
+          <tr><th scope="row"><span class="dot d-eth" style="display:inline-block;margin-right:8px"></span>BNB Smart Chain</th><td class="mono">BNB</td><td class="mono">USDT</td><td>EVM (0x…)</td><td class="mono">1–2</td></tr>
+          <tr><th scope="row"><span class="dot d-sol" style="display:inline-block;margin-right:8px"></span>Solana</th><td class="mono">SOL</td><td class="mono">USDC, USDT</td><td>Solana</td><td class="mono">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="prose" style="margin-top:2.2rem">
+      <p>The confirmation count is worth understanding, because it is a consequence of how each chain works rather than a design choice. On <strong>Solana</strong>, one transaction can carry two transfer instructions, so the donation and the platform fee settle together in a single signature. On <strong>EVM chains</strong>, wallets that support EIP-5792 batching do the same; wallets that do not will show two clearly labelled transactions. On <strong>Bitcoin</strong>, the WalletConnect transfer method takes one recipient, so the donation and the fee are two separate transactions.</p>
+      <p>Stablecoins are deliberately a short, curated allow-list. USDC and USDT are pinned to their official contract addresses, hard-coded in the plugin. You cannot add an arbitrary token, and neither can anyone else — which is the point.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADD IT ============ -->
+<section id="add">
+  <div class="wrap">
+    <div class="eyebrow">05 — Three ways to add it</div>
+    <h2>Block, shortcode, or widget.</h2>
+    <ul class="feat">
+      <li>
+        <h3>Gutenberg block</h3>
+        <p>Search for “Crypto Donate” in the block inserter and drop it into any page or post. Configure the label and default amount from the block sidebar.</p>
+      </li>
+      <li>
+        <h3>Shortcode</h3>
+        <p>Paste <code>[crypto_donate]</code> anywhere a shortcode runs — classic editor, page builder, template. Accepts attributes for the button label and default amount.</p>
+      </li>
+      <li>
+        <h3>Sidebar widget</h3>
+        <p>Add the CryptoStack Donations widget to any sidebar or footer area under Appearance → Widgets for a persistent donate box.</p>
+      </li>
+    </ul>
+    <div class="two-col" style="margin-top:2.6rem">
+      <div class="prose">
+        <h3 style="margin-bottom:.6em">Setting up</h3>
+        <p>Install the plugin, then open <strong>Settings → CryptoStack Donations</strong>. You need two things: a free WalletConnect Project ID from <a href="https://dashboard.reown.com/" rel="noopener">Reown's dashboard</a> (this identifies your site to the wallet-connection relay), and at least one receiving address.</p>
+        <p>Paste your addresses, enable the networks and stablecoins you want, choose a theme and accent colour, and save. Saving locks the wallet addresses; changing them later requires an explicit unlock, which is a deliberate guard against a compromised admin account quietly redirecting your donations.</p>
+      </div>
+      <div>
+        <pre><code><span class="c">// Simplest possible use</span>
+[crypto_donate]
+
+<span class="c">// With a custom label and a default amount</span>
+[crypto_donate
+  label=<span class="s">"Support our reporting"</span>
+  amount=<span class="s">"0.01"</span>]</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEE ============ -->
+<section id="fee">
+  <div class="wrap">
+    <div class="eyebrow">06 — The fee, stated plainly</div>
+    <div class="two-col">
+      <div>
+        <h2>One percent. That's the whole business model.</h2>
+      </div>
+      <div class="prose">
+        <p>This plugin is free, it is GPL-licensed, and it will stay that way. There is no paid version, no “Pro” edition, no licence key, no trial, and no feature held back behind a payment. Everything the plugin does, it does for everyone, permanently.</p>
+        <p>It is funded by a <strong>1% platform fee</strong> on donations, the same way a payment processor keeps a percentage of what it moves. The fee is sent on-chain, in the same flow as the donation, to the maintainer's wallets — which are written in plain sight in <code>includes/config.php</code>, not hidden. You choose how it applies:</p>
+        <p><strong>Inclusive</strong> — the fee comes out of the donation amount, and your cause receives 99%.<br>
+        <strong>On top</strong> — the donor pays an extra 1%, and your cause receives 100%.</p>
+        <p>Nothing about this is concealed. The donor sees every single receiving address in their own wallet before they sign anything. And because the plugin is GPL, if you would rather not have the fee at all, you are free to fork the code and remove it. No licence check, no phone-home, and no mechanism anywhere that would stop you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECURITY ============ -->
+<section id="security">
+  <div class="wrap">
+    <div class="eyebrow">07 — Security &amp; anti-scam design</div>
+    <h2>The dangerous things simply aren't in the code.</h2>
+    <p class="lede" style="margin-bottom:2.4rem">Most crypto losses come from signing something you did not understand. The safest way to prevent that is to make the harmful action impossible to construct in the first place.</p>
+    <ul class="feat">
+      <li>
+        <h3>No <code>approve</code>, ever</h3>
+        <p>Unlimited token approvals are the mechanism behind a huge share of wallet drains. This plugin only ever builds a direct <code>transfer</code>. It cannot request an allowance, because that code path does not exist.</p>
+      </li>
+      <li>
+        <h3>No arbitrary contract calls</h3>
+        <p>The only contracts it will ever touch are the hard-coded USDC and USDT addresses. It cannot be pointed at an unknown contract by a setting, a shortcode attribute, or a URL parameter.</p>
+      </li>
+      <li>
+        <h3>Address locking</h3>
+        <p>Wallet addresses lock on save. Unlocking is an explicit, confirmed action — so a stolen admin session cannot silently swap your donation address for someone else's.</p>
+      </li>
+      <li>
+        <h3>Integrity fingerprint</h3>
+        <p>The fee routing is checked against a SHA-256 fingerprint at runtime. If it doesn't match, the plugin fails safe: it drops the fee rather than sending funds anywhere unverified.</p>
+      </li>
+      <li>
+        <h3>No key ever touches the site</h3>
+        <p>Signing happens in the donor's wallet. Your WordPress installation never holds, transmits, or requests a private key or seed phrase — not the donor's, and not yours.</p>
+      </li>
+      <li>
+        <h3>Readable, auditable source</h3>
+        <p>The PHP and the donation engine are plain, commented, human-readable code. The bundled wallet library ships with its unminified source alongside it. You can read exactly what signs what.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ CUSTOMISE ============ -->
+<section id="customise">
+  <div class="wrap">
+    <div class="eyebrow">08 — Making it yours</div>
+    <div class="two-col">
+      <div class="prose">
+        <h2>Themed with CSS variables.</h2>
+        <p>The widget ships with light, dark and automatic themes and an accent-colour picker, which covers most sites without touching code. When you want more, every meaningful value is exposed as a CSS custom property. Override them in your theme and the whole widget follows.</p>
+        <p>Useful selectors include <code>.csdon-card</code>, <code>.csdon-donate-btn</code>, <code>.csdon-wallet-btn</code>, <code>.csdon-select</code>, <code>.csdon-input</code> and the status states <code>.csdon-status--ok</code> and <code>.csdon-status--err</code>.</p>
+      </div>
+      <div>
+        <pre><code>.csdon-widget {
+  --csdon-accent:   #6d28d9;  <span class="c">/* buttons */</span>
+  --csdon-accent-2: #8b5cf6;  <span class="c">/* gradient end */</span>
+  --csdon-bg:       #ffffff;  <span class="c">/* card */</span>
+  --csdon-fg:       #0f172a;  <span class="c">/* text */</span>
+  --csdon-border:   #e6e8ee;  <span class="c">/* borders */</span>
+  --csdon-radius:   14px;     <span class="c">/* corners */</span>
+}</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRIVACY ============ -->
+<section id="privacy">
+  <div class="wrap">
+    <div class="eyebrow">09 — Privacy &amp; external services</div>
+    <div class="two-col">
+      <div>
+        <h2>Nothing happens until a visitor asks for it.</h2>
+        <p class="lede">The plugin does no analytics, no tracking, and no reporting home. It sends nothing at all to the developer, ever.</p>
+      </div>
+      <div class="prose">
+        <p>Connecting a wallet or sending a donation does require real infrastructure, and it should be stated rather than buried. When — and only when — a visitor connects a wallet, the bundled Reown AppKit contacts <strong>WalletConnect</strong> endpoints to establish and maintain the encrypted wallet session and to route blockchain RPC calls. If a visitor chooses <strong>Coinbase Wallet</strong> specifically, that wallet's own SDK contacts Coinbase. Sending a Solana donation reads a recent blockhash from a public <strong>Solana RPC</strong> endpoint and broadcasts the signed transaction there.</p>
+        <p>Completing any donation broadcasts it to a public blockchain, where it is permanently visible. That is inherent to sending cryptocurrency, not a property of this plugin.</p>
+        <p>Every one of these services is documented in the plugin's readme with its terms of service and privacy policy, so you can satisfy your own disclosure obligations without reverse-engineering anything.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" itemscope itemtype="https://schema.org/FAQPage">
+  <div class="wrap">
+    <div class="eyebrow">10 — Frequently asked questions</div>
+    <h2>Questions people actually ask.</h2>
+    <div style="margin-top:2rem">
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">What is the best crypto donation plugin for WordPress?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>That depends on one decision: whether you want to hold your own funds. If you are happy for a service to receive donations and pay you out later, a custodial gateway is simpler and offers card payments too. If you want donations to arrive in a wallet only you control, you want a non-custodial plugin. CryptoStack Donations is built for the second case: it accepts Bitcoin, Ethereum, Polygon, Base, BNB Smart Chain and Solana donations directly to your own addresses, with no account in between, and it is free and open source.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">How do I accept crypto donations on a WordPress site?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>Install a donation plugin, give it a wallet address you control, and place the donation form on a page. With CryptoStack Donations that means: install the plugin, get a free WalletConnect Project ID from Reown, paste your Bitcoin, EVM and/or Solana addresses into Settings → CryptoStack Donations, enable the networks you want, then add the block or the <code>[crypto_donate]</code> shortcode to a page. Send one small test donation to yourself before you announce it.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Is it really non-custodial?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>Yes. The transaction is built in the donor's browser and signed in the donor's wallet, addressed to the wallets you configured. No key, seed phrase or fund ever passes through your WordPress site, through any server belonging to the developer, or through any third-party account. The only involvement the maintainer has is the disclosed 1% fee, which is part of the same on-chain transfer and visible to the donor before they sign.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Does it use a smart contract?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>No, and this is deliberate. No contract is ever deployed on any chain. On Solana a single transaction carries both transfer instructions natively. On EVM chains the plugin batches both transfers into one wallet approval where the wallet supports EIP-5792, and otherwise sends two clearly labelled transactions. On Bitcoin they are two transactions. Avoiding contracts removes an entire category of risk: there is no contract to audit, no contract to exploit, and no upgradeable proxy that could change behaviour later.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Which wallets can my donors use?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>Anything that speaks WalletConnect, which is most of the market: MetaMask, Trust Wallet, Rainbow, Phantom, Coinbase Wallet, Ledger Live, Zerion, OKX Wallet and hundreds more. Browser extensions are detected automatically. On mobile the connection deep-links straight into the wallet app; on desktop it presents a QR code.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Why do I need a WalletConnect Project ID?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>WalletConnect sessions are relayed through Reown's infrastructure, and the Project ID identifies your site to that relay. It is free, it takes about a minute to create at the Reown dashboard, and it is not a licence key — it unlocks nothing in the plugin. It is simply required by the wallet-connection protocol itself.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Can I accept USDC or USDT donations?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>Yes. USDC and USDT are supported on the chains where they are canonical: USDC and USDT on Ethereum, Polygon and Solana, USDC on Base, and USDT on BNB Smart Chain. Their contract addresses are hard-coded, so a lookalike or scam token cannot be substituted. Stablecoins are often what donors actually prefer, since the amount they give is the amount that arrives.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Why does Bitcoin ask for two confirmations?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>Because the WalletConnect Bitcoin transfer method sends to one recipient per call. Paying both the recipient and the platform fee therefore takes two transactions, and the donor approves each. Combining them into a single multi-output transaction would require the plugin to build and sign a raw PSBT, which means running a UTXO indexer and doing its own fee estimation — a large amount of moving machinery, and a much bigger surface for something to go wrong with someone else's money. The two-transaction model is the honest trade-off.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Is there a paid or Pro version?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>No, and there never will be. This is the whole plugin. Nothing is held back, nothing is locked, and no feature requires a payment or an upgrade to use. The 1% platform fee is simply how the free plugin is paid for.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Can I remove the 1% fee?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>Not from the settings — it applies to everyone equally and it is what funds development. But the plugin is licensed GPL-2.0-or-later, so you are entirely free to fork the source and change it. There is no licence check, no phone-home, and no mechanism that disables anything if you do. You can also choose “on top” mode so the donor covers the fee and your cause receives the full amount.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Does the plugin track my visitors?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>No. There is no analytics, no tracking pixel, and no data of any kind sent to the developer. The only external contact happens when a visitor deliberately connects a wallet or sends a donation, at which point the WalletConnect relay and the relevant blockchain network are involved — because that is what connecting a wallet means. Every such service is documented in the plugin's readme with its terms and privacy policy.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">What do I need to run it?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>WordPress 6.4 or later, PHP 7.4 or later, a free WalletConnect Project ID, and at least one wallet address you control. No database tables are created, no cron jobs are scheduled, and no external account is required. Uninstalling removes the plugin's settings cleanly on both single sites and multisite.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Do I owe tax on crypto donations?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>Very possibly, and it depends entirely on your jurisdiction and on what you are — an individual, a company, or a registered charity. Many tax authorities treat received cryptocurrency as income valued at the moment it arrives, and treat any later change in its value as a separate taxable event. This page cannot advise you; nothing here is legal, tax or financial advice. Because every donation is recorded on a public blockchain with a timestamp, the records you need are at least easy to produce. Speak to a professional in your own country before you rely on any of it.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Is the plugin on the WordPress.org directory?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">
+          <p>It is currently in review. Until then, download it from the GitHub repository, where the full source, the build tooling and the release history all live. It is GPL-2.0-or-later, so you are free to use, study, modify and redistribute it either way.</p>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section id="get">
+  <div class="wrap" style="text-align:center">
+    <h2 style="max-width:20ch;margin:0 auto .5em">Start accepting <em>crypto donations</em> today.</h2>
+    <p class="lede" style="margin:0 auto 2rem">Free, open source, GPL-licensed, and yours to fork. No account, no signup, no salesperson.</p>
+    <div class="cta" style="justify-content:center">
+      <a class="btn btn-primary" href="https://github.com/Finland93/cryptostack-donations">Download from GitHub →</a>
+      <a class="btn btn-ghost" href="https://github.com/Finland93/cryptostack-donations/issues">Report an issue</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>CryptoStack Donations</h4>
+        <p style="margin:0;max-width:44ch;font-size:.95rem;color:var(--ink-soft)">A free, non-custodial crypto donation plugin for WordPress. Bitcoin, Ethereum, Polygon, Base, BNB Smart Chain and Solana — direct to your own wallet.</p>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href="https://github.com/Finland93/cryptostack-donations">Source on GitHub</a></li>
+          <li><a href="https://github.com/Finland93/cryptostack-donations/issues">Issue tracker</a></li>
+          <li><a href="https://github.com/Finland93/cryptostack-donations/blob/main/CHANGELOG.md">Changelog</a></li>
+          <li><a href="https://github.com/Finland93/cryptostack-donations/blob/main/LICENSE">GPL-2.0-or-later</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>On this page</h4>
+        <ul>
+          <li><a href="#custody">Why non-custodial</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#networks">Supported networks</a></li>
+          <li><a href="#fee">The 1% fee</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="colophon">
+      Built by <a href="https://github.com/Finland93">Finland93</a> · Wallet connectivity by Reown AppKit / WalletConnect · Not affiliated with the WordPress Foundation, Bitcoin, Ethereum, Solana, Circle or Tether.<br>
+      Cryptocurrency transactions are irreversible and public. Nothing on this page is financial, tax or legal advice.
+    </p>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://finland93.github.io/cryptostack-donations/#website",
+      "url": "https://finland93.github.io/cryptostack-donations/",
+      "name": "CryptoStack Donations",
+      "description": "Free, non-custodial crypto donation plugin for WordPress supporting Bitcoin, Ethereum, Solana and stablecoins.",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://github.com/Finland93#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://github.com/Finland93#person",
+      "name": "Finland93",
+      "url": "https://github.com/Finland93",
+      "sameAs": ["https://github.com/Finland93/cryptostack-donations"]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://finland93.github.io/cryptostack-donations/#webpage",
+      "url": "https://finland93.github.io/cryptostack-donations/",
+      "name": "Crypto Donation Plugin for WordPress | CryptoStack Donations",
+      "isPartOf": { "@id": "https://finland93.github.io/cryptostack-donations/#website" },
+      "about": { "@id": "https://finland93.github.io/cryptostack-donations/#software" },
+      "inLanguage": "en",
+      "breadcrumb": { "@id": "https://finland93.github.io/cryptostack-donations/#breadcrumb" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://finland93.github.io/cryptostack-donations/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "CryptoStack Donations", "item": "https://finland93.github.io/cryptostack-donations/" }
+      ]
+    }
+  ]
+}
+</script>
+
+</body>
+</html>
