@@ -4,7 +4,7 @@
  * Splits every donation into two on-chain transfers WITHOUT any smart
  * contract:
  *   - recipient (the site owner's configured wallet)
- *   - treasury  (the hardcoded 1% platform fee wallet)
+ *   - treasury  (the optional platform fee wallet, when a fee is enabled)
  *
  * Per chain:
  *   EVM     : EIP-5792 wallet_sendCalls (ONE approval) when the wallet
@@ -20,14 +20,14 @@
  * `approve`, never touches arbitrary contracts, and never accepts an
  * arbitrary token. The donor always reviews and confirms in their wallet.
  *
- * Wallet connectivity is provided by window.CSDAppKit (a thin wrapper around
+ * Wallet connectivity is provided by window.CSDONAppKit (a thin wrapper around
  * Reown AppKit / WalletConnect, built locally — see assets/src + README).
  */
 ( function () {
 	'use strict';
 
-	var CFG = window.CSD_CONFIG || null;
-	var AK  = window.CSDAppKit || null;
+	var CFG = window.CSDON_CONFIG || null;
+	var AK  = window.CSDONAppKit || null;
 
 	if ( ! CFG ) {
 		return;
@@ -84,110 +84,6 @@
 		var whole = s.slice( 0, s.length - decimals );
 		var frac  = s.slice( s.length - decimals ).replace( /0+$/, '' );
 		return ( neg ? '-' : '' ) + whole + ( frac ? '.' + frac : '' );
-	}
-
-	/**
-	 * Convert a USD amount into the smallest units of an asset, given the
-	 * asset's USD price and its decimals.
-	 *
-	 * The donor always enters USD. We divide by the unit price to get a human
-	 * decimal crypto amount, then scale into integer base units. We compute at
-	 * high precision using BigInt (never floats) to avoid rounding drift:
-	 *
-	 *   units = round( usd / price * 10^decimals )
-	 *         = round( usd * 10^decimals / price )
-	 *
-	 * @param {string|number} usd      Amount in USD (decimal).
-	 * @param {number}        price    Asset price in USD per 1 whole unit.
-	 * @param {number}        decimals Asset decimals.
-	 * @returns {bigint} Amount in smallest units.
-	 */
-	function usdToUnits( usd, price, decimals ) {
-		if ( ! ( price > 0 ) ) {
-			throw new Error( 'Invalid price' );
-		}
-		// Work in fixed-point: represent USD and price with PREC extra digits
-		// so integer division keeps precision, then round to base units.
-		var PREC = 12;
-		var usdScaled   = parseUnits( String( usd ), PREC );                       // usd * 10^PREC
-		var priceScaled = parseUnits( String( price ), PREC );                     // price * 10^PREC
-		if ( priceScaled <= 0n ) {
-			throw new Error( 'Invalid price' );
-		}
-		// units = usd * 10^decimals / price
-		//       = (usdScaled * 10^decimals) / priceScaled   (the 10^PREC cancels)
-		var scale     = 10n ** BigInt( decimals );
-		var numerator = usdScaled * scale;
-		// Round to nearest by adding half the divisor before dividing.
-		return ( numerator + priceScaled / 2n ) / priceScaled;
-	}
-
-	/* ------------------------------------------------------------------ *
-	 * Live USD pricing. Donors enter USD; we fetch the asset's USD price
-	 * from CoinGecko (public, keyless) and cache it briefly.
-	 * ------------------------------------------------------------------ */
-
-	var priceCache = {}; // id -> { price: number, ts: number }
-
-	/**
-	 * Resolve the CoinGecko id used to price a selection in USD.
-	 *
-	 * @param {object} chain Chain config.
-	 * @param {object|null} token Token config or null for native.
-	 * @returns {string|null}
-	 */
-	function coingeckoIdFor( chain, token ) {
-		if ( token ) {
-			return token.coingecko || null;
-		}
-		return chain.coingecko || null;
-	}
-
-	/**
-	 * Fetch the USD price for a CoinGecko id, using a short-lived cache.
-	 *
-	 * @param {string} id CoinGecko id (e.g. "bitcoin").
-	 * @returns {Promise<number>} USD price per whole unit.
-	 */
-	async function fetchUsdPrice( id ) {
-		var ttl = CFG.priceTtlMs || 60000;
-		var now = Date.now();
-		var hit = priceCache[ id ];
-		if ( hit && ( now - hit.ts ) < ttl ) {
-			return hit.price;
-		}
-
-		var base = CFG.priceApi || 'https://api.coingecko.com/api/v3/simple/price';
-		var url  = base + '?ids=' + encodeURIComponent( id ) + '&vs_currencies=usd';
-
-		var resp = await fetch( url, { headers: { accept: 'application/json' } } );
-		if ( ! resp.ok ) {
-			throw new Error( CFG.i18n.priceError );
-		}
-		var data  = await resp.json();
-		var price = data && data[ id ] && data[ id ].usd;
-		if ( ! ( price > 0 ) ) {
-			throw new Error( CFG.i18n.priceError );
-		}
-		priceCache[ id ] = { price: price, ts: now };
-		return price;
-	}
-
-	/**
-	 * Get the USD price for a chain/token selection. Stablecoins that map to
-	 * a USD-pegged id still go through the feed, so a depegged price is
-	 * reflected accurately rather than assumed to be exactly 1.00.
-	 *
-	 * @param {object} chain Chain config.
-	 * @param {object|null} token Token or null for native.
-	 * @returns {Promise<number>}
-	 */
-	async function priceForSelection( chain, token ) {
-		var id = coingeckoIdFor( chain, token );
-		if ( ! id ) {
-			throw new Error( CFG.i18n.priceError );
-		}
-		return fetchUsdPrice( id );
 	}
 
 	/**
@@ -361,7 +257,7 @@
 	 * Solana flow — ONE tx, TWO instructions, ONE signature, no program.
 	 *
 	 * Requires @solana/web3.js (and @solana/spl-token for SPL) bundled in
-	 * the AppKit build, exposed as window.CSDAppKit.solana.* helpers.
+	 * the AppKit build, exposed as window.CSDONAppKit.solana.* helpers.
 	 * ------------------------------------------------------------------ */
 
 	/**
@@ -398,7 +294,7 @@
 	 * txid. So when a fee applies we send TWO transactions (donation, then fee)
 	 * — the same two-step model as the EVM fallback. The donor approves each.
 	 * Amounts are in satoshis. (A single-signature two-output PSBT is possible
-	 * via signPSBT but needs manual UTXO/fee handling — see README.)
+	 * via signPSBT but needs manual UTXO/fee handling; not currently implemented.)
 	 * ------------------------------------------------------------------ */
 
 	/**
@@ -457,17 +353,10 @@
 			decimals = token.decimals;
 		}
 
-		// The donor enters USD. Reject non-positive input up front.
-		var usd = parseFloat( String( sel.amount == null ? '' : sel.amount ).replace( /,/g, '' ) );
-		if ( ! ( usd > 0 ) ) {
-			throw new Error( CFG.i18n.enterUsd );
-		}
-
-		// Fetch the live USD price and convert to the asset's smallest units.
-		var price   = await priceForSelection( chain, token );
-		var entered = usdToUnits( usd, price, decimals );
+		// The donor enters the amount in the selected asset's own units.
+		var entered = parseUnits( String( sel.amount == null ? '' : sel.amount ).replace( /,/g, '' ), decimals );
 		if ( entered <= 0n ) {
-			throw new Error( CFG.i18n.enterUsd );
+			throw new Error( CFG.i18n.enterAmount );
 		}
 		var split = splitAmount( entered );
 
@@ -515,8 +404,8 @@
 	}
 
 	function field( labelText, control ) {
-		var wrap = el( 'label', { class: 'csd-field' } );
-		wrap.appendChild( el( 'span', { class: 'csd-label', text: labelText } ) );
+		var wrap = el( 'label', { class: 'csdon-field' } );
+		wrap.appendChild( el( 'span', { class: 'csdon-label', text: labelText } ) );
 		wrap.appendChild( control );
 		return wrap;
 	}
@@ -537,10 +426,10 @@
 		var i18n = CFG.i18n;
 		var keys = chainKeys();
 
-		var card = el( 'div', { class: 'csd-card' } );
+		var card = el( 'div', { class: 'csdon-card' } );
 
 		// Network select (hidden when only one chain is configured).
-		var netSel = el( 'select', { class: 'csd-select csd-net' } );
+		var netSel = el( 'select', { class: 'csdon-select csdon-net' } );
 		keys.forEach( function ( k ) {
 			netSel.appendChild( el( 'option', { value: k, text: CFG.chains[ k ].label } ) );
 		} );
@@ -550,7 +439,7 @@
 		}
 
 		// Asset select.
-		var assetSel = el( 'select', { class: 'csd-select csd-asset' } );
+		var assetSel = el( 'select', { class: 'csdon-select csdon-asset' } );
 		var assetField = field( i18n.asset, assetSel );
 
 		function refreshAssets() {
@@ -565,24 +454,25 @@
 			assetField.style.display = syms.length ? '' : 'none';
 		}
 
-		// Amount — entered in USD. A "$" adornment and a live "≈ crypto"
-		// estimate make it unambiguous that the figure is US dollars.
-		var amount = el( 'input', { class: 'csd-input csd-amount', type: 'text', inputmode: 'decimal', placeholder: '0.00' } );
+		// Amount — entered in the selected asset's own units. A unit suffix
+		// (BTC/ETH/SOL/…) shows which asset the figure is in.
+		var amount = el( 'input', { class: 'csdon-input csdon-amount', type: 'text', inputmode: 'decimal', placeholder: '0.00' } );
 		var def = widget.getAttribute( 'data-default-amount' );
 		if ( def ) { amount.value = def; }
-		var amountWrap = el( 'div', { class: 'csd-amount-wrap' }, [
-			el( 'span', { class: 'csd-amount-prefix', 'aria-hidden': 'true', text: '$' } ),
+		var amountUnit = el( 'span', { class: 'csdon-amount-unit', 'aria-hidden': 'true', text: '' } );
+		var amountWrap = el( 'div', { class: 'csdon-amount-wrap' }, [
 			amount,
+			amountUnit,
 		] );
-		var estimate = el( 'div', { class: 'csd-estimate' } );
+		var estimate = el( 'div', { class: 'csdon-estimate' } );
 		var amountField = field( i18n.amount, el( 'div', {}, [ amountWrap, estimate ] ) );
 
 		// Wallet connect/disconnect — one button that shows the current state.
-		var walletBtn = el( 'button', { class: 'csd-wallet-btn', type: 'button' } );
+		var walletBtn = el( 'button', { class: 'csdon-wallet-btn', type: 'button' } );
 
 		// Donate + status.
-		var donateBtn = el( 'button', { class: 'csd-donate-btn', type: 'button', text: i18n.donate } );
-		var status = el( 'div', { class: 'csd-status' } );
+		var donateBtn = el( 'button', { class: 'csdon-donate-btn', type: 'button', text: i18n.donate } );
+		var status = el( 'div', { class: 'csdon-status' } );
 
 		function currentChain() { return CFG.chains[ netSel.value ]; }
 
@@ -596,46 +486,40 @@
 			return assetSel.value ? assetSel.value : ch.native;
 		}
 
-		// Live "≈ X BTC" estimate under the amount field. Debounced so typing
-		// doesn't spam the price API; results are cached in fetchUsdPrice.
-		var estTimer = null;
-		var estSeq   = 0;
-
+		// Show the fee split (recipient vs fee) in the asset's own units.
+		// Fully local: no network calls and no external pricing service.
 		function renderEstimate( text, cls ) {
-			estimate.className = 'csd-estimate' + ( cls ? ' ' + cls : '' );
+			estimate.className = 'csdon-estimate' + ( cls ? ' ' + cls : '' );
 			estimate.textContent = text || '';
 		}
 
+		function updateUnitLabel() {
+			amountUnit.textContent = currentSymbol();
+		}
+
 		function updateEstimate() {
-			var usd = parseFloat( String( amount.value || '' ).replace( /,/g, '' ) );
-			if ( ! ( usd > 0 ) ) {
+			updateUnitLabel();
+			var sym      = currentSymbol();
+			var token    = currentToken();
+			var ch       = currentChain();
+			var decimals = token ? token.decimals : ch.decimals;
+			var entered  = parseUnits( String( amount.value || '' ).replace( /,/g, '' ), decimals );
+			if ( entered <= 0n || ! ( CFG.feeBps > 0 ) ) {
 				renderEstimate( '' );
 				return;
 			}
-			var ch    = currentChain();
-			var token = currentToken();
-			var sym   = currentSymbol();
-			var seq   = ++estSeq;
-			renderEstimate( i18n.fetchingPrice, 'csd-estimate--busy' );
-			priceForSelection( ch, token ).then( function ( price ) {
-				if ( seq !== estSeq ) { return; } // A newer update superseded us.
-				var decimals = token ? token.decimals : ch.decimals;
-				var units    = usdToUnits( usd, price, decimals );
-				var human    = formatUnits( units, decimals );
-				var tmpl     = i18n.approxAmount || '≈ %1$s %2$s';
-				renderEstimate( tmpl.replace( '%1$s', human ).replace( '%2$s', sym ), 'csd-estimate--ok' );
-			} ).catch( function () {
-				if ( seq !== estSeq ) { return; }
-				renderEstimate( i18n.priceError, 'csd-estimate--err' );
-			} );
+			var split = splitAmount( entered );
+			var tmpl  = i18n.feeSplit || 'Recipient gets %1$s · fee %2$s %3$s';
+			renderEstimate(
+				tmpl
+					.replace( '%1$s', formatUnits( split.recipient, decimals ) )
+					.replace( '%2$s', formatUnits( split.fee, decimals ) )
+					.replace( '%3$s', sym ),
+				'csdon-estimate--ok'
+			);
 		}
 
-		function scheduleEstimate() {
-			if ( estTimer ) { clearTimeout( estTimer ); }
-			estTimer = setTimeout( updateEstimate, 350 );
-		}
-
-		amount.addEventListener( 'input', scheduleEstimate );
+		amount.addEventListener( 'input', updateEstimate );
 		assetSel.addEventListener( 'change', updateEstimate );
 
 		function refreshWallet() {
@@ -674,7 +558,7 @@
 
 		donateBtn.addEventListener( 'click', async function () {
 			donateBtn.disabled = true;
-			status.className = 'csd-status csd-status--busy';
+			status.className = 'csdon-status csdon-status--busy';
 			status.textContent = i18n.processing;
 			try {
 				var result = await donate( {
@@ -683,14 +567,14 @@
 					amount: amount.value,
 				} );
 
-				status.className = 'csd-status csd-status--ok';
+				status.className = 'csdon-status csdon-status--ok';
 				status.textContent = i18n.thankYou;
 
 				var first = result.txids && result.txids[ 0 ];
 				if ( first && result.chain.explorer ) {
 					status.appendChild( document.createTextNode( ' ' ) );
 					status.appendChild( el( 'a', {
-						class: 'csd-txlink',
+						class: 'csdon-txlink',
 						href: result.chain.explorer + first,
 						target: '_blank',
 						rel: 'noopener noreferrer',
@@ -698,11 +582,11 @@
 					} ) );
 				}
 				if ( ! result.batched && result.txids && result.txids.length > 1 ) {
-					status.appendChild( el( 'div', { class: 'csd-hint', text: '(' + result.txids.length + ' ' + ( i18n.transactions || 'transactions' ) + ')' } ) );
+					status.appendChild( el( 'div', { class: 'csdon-hint', text: '(' + result.txids.length + ' ' + ( i18n.transactions || 'transactions' ) + ')' } ) );
 				}
 				refreshers.forEach( function ( fn ) { fn(); } );
 			} catch ( err ) {
-				status.className = 'csd-status csd-status--err';
+				status.className = 'csdon-status csdon-status--err';
 				status.textContent = ( err && err.message ) ? err.message : i18n.error;
 			} finally {
 				donateBtn.disabled = false;
@@ -710,7 +594,7 @@
 		} );
 
 		// Assemble.
-		card.appendChild( el( 'div', { class: 'csd-grid' }, [ netField, assetField ] ) );
+		card.appendChild( el( 'div', { class: 'csdon-grid' }, [ netField, assetField ] ) );
 		card.appendChild( amountField );
 		card.appendChild( walletBtn );
 		card.appendChild( donateBtn );
@@ -718,9 +602,7 @@
 
 		refreshAssets();
 		refreshWallet();
-		if ( amount.value ) {
-			updateEstimate();
-		}
+		updateEstimate();
 
 		return card;
 	}
@@ -743,9 +625,9 @@
 			}
 		}
 
-		document.querySelectorAll( '[data-csd-widget]' ).forEach( function ( widget ) {
-			if ( widget.getAttribute( 'data-csd-ready' ) === '1' ) { return; }
-			widget.setAttribute( 'data-csd-ready', '1' );
+		document.querySelectorAll( '[data-csdon-widget]' ).forEach( function ( widget ) {
+			if ( widget.getAttribute( 'data-csdon-ready' ) === '1' ) { return; }
+			widget.setAttribute( 'data-csdon-ready', '1' );
 
 			if ( ! chainKeys().length ) {
 				widget.textContent = CFG.i18n.noChains;
@@ -772,5 +654,5 @@
 	}
 
 	// Expose for debugging / programmatic use.
-	window.CSDDonate = { donate: donate, parseUnits: parseUnits, formatUnits: formatUnits, splitAmount: splitAmount, usdToUnits: usdToUnits };
+	window.CSDONDonate = { donate: donate, parseUnits: parseUnits, formatUnits: formatUnits, splitAmount: splitAmount };
 } )();

@@ -14,7 +14,7 @@
 
 	document.addEventListener( 'DOMContentLoaded', function () {
 		// Confirm before unlocking the wallet fields.
-		var unlockBtn = document.querySelector( 'button[name="csd_action"][value="unlock"]' );
+		var unlockBtn = document.querySelector( 'button[name="csdon_action"][value="unlock"]' );
 		if ( unlockBtn ) {
 			unlockBtn.addEventListener( 'click', function ( e ) {
 				var ok = window.confirm(
@@ -32,9 +32,9 @@
 		 * Non-blocking address format hints.
 		 * --------------------------------------------------------------- */
 		var checks = [
-			{ id: 'csd_evm', re: /^0x[a-fA-F0-9]{40}$/, msg: 'Expected 0x followed by 40 hex characters.' },
-			{ id: 'csd_sol', re: /^[1-9A-HJ-NP-Za-km-z]{32,44}$/, msg: 'Expected a base58 Solana address (32–44 chars).' },
-			{ id: 'csd_btc', re: /^bc1q[02-9ac-hj-np-z]{38,58}$/, msg: 'Expected a Native SegWit address starting with bc1q.' }
+			{ id: 'csdon_evm', re: /^0x[a-fA-F0-9]{40}$/, msg: 'Expected 0x followed by 40 hex characters.' },
+			{ id: 'csdon_sol', re: /^[1-9A-HJ-NP-Za-km-z]{32,44}$/, msg: 'Expected a base58 Solana address (32–44 chars).' },
+			{ id: 'csdon_btc', re: /^bc1q[02-9ac-hj-np-z]{38,58}$/, msg: 'Expected a Native SegWit address starting with bc1q.' }
 		];
 
 		checks.forEach( function ( c ) {
@@ -45,18 +45,18 @@
 
 			function validate() {
 				var v = input.value.trim();
-				var warn = input.parentNode.querySelector( '.csd-field-warning' );
+				var warn = input.parentNode.querySelector( '.csdon-field-warning' );
 				if ( '' === v || c.re.test( v ) ) {
-					input.classList.remove( 'csd-invalid' );
+					input.classList.remove( 'csdon-invalid' );
 					if ( warn ) {
 						warn.parentNode.removeChild( warn );
 					}
 					return;
 				}
-				input.classList.add( 'csd-invalid' );
+				input.classList.add( 'csdon-invalid' );
 				if ( ! warn ) {
 					warn = document.createElement( 'span' );
-					warn.className = 'csd-field-warning';
+					warn.className = 'csdon-field-warning';
 					input.parentNode.appendChild( warn );
 				}
 				warn.textContent = c.msg;
@@ -64,7 +64,7 @@
 
 			input.addEventListener( 'blur', validate );
 			input.addEventListener( 'input', function () {
-				if ( input.classList.contains( 'csd-invalid' ) ) {
+				if ( input.classList.contains( 'csdon-invalid' ) ) {
 					validate();
 				}
 			} );
@@ -73,7 +73,7 @@
 		 * Accent color picker (WordPress wp-color-picker).
 		 * --------------------------------------------------------------- */
 		if ( window.jQuery && window.jQuery.fn && window.jQuery.fn.wpColorPicker ) {
-			window.jQuery( '.csd-color-field' ).wpColorPicker();
+			window.jQuery( '.csdon-color-field' ).wpColorPicker();
 		}
 	} );
 } )();
