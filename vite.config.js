@@ -3,7 +3,7 @@
  *
  * Bundles assets/src/appkit-bundle.js (which imports Reown AppKit and the Solana
  * libraries) into a single self-contained IIFE at build/appkit-bundle.js. The
- * source assigns window.CSDAppKit, which the donation engine consumes.
+ * source assigns window.CSDONAppKit, which the donation engine consumes.
  *
  * The Solana / WalletConnect dependency tree expects Node globals (Buffer,
  * process, global). vite-plugin-node-polyfills injects browser-safe shims so the
@@ -38,7 +38,7 @@ export default defineConfig( {
 		minify: true,
 		lib: {
 			entry: 'assets/src/appkit-bundle.js',
-			name: 'CSDAppKitBundle',
+			name: 'CSDONAppKitBundle',
 			formats: [ 'iife' ],
 			fileName: () => 'appkit-bundle.js',
 		},

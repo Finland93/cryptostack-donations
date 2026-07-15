@@ -8,14 +8,14 @@ Thanks for your interest in improving the plugin! This guide covers the project 
 cryptostack-donations.php        Bootstrap, constants, activation/uninstall hooks
 includes/
   config.php                     Hardcoded fee wallets + integrity check, chain list, token allow-list
-  class-csd-settings.php         Admin settings, validation, lock-on-save logic
-  class-csd-render.php           Shortcode + block + asset loading, builds the JS config
-  class-csd-widget.php           Classic sidebar widget
+  class-csdon-settings.php         Admin settings, validation, lock-on-save logic
+  class-csdon-render.php           Shortcode + block + asset loading, builds the JS config
+  class-csdon-widget.php           Classic sidebar widget
 assets/
   css/donation.css               Inline widget + admin styles (light/dark/auto, accent var)
   js/donation-engine.js          Core: fee split (BigInt), tx building, inline UI
   js/admin.js                    Settings lock UX + accent color picker init
-  src/appkit-bundle.js           SOURCE for the Reown AppKit wrapper (window.CSDAppKit)
+  src/appkit-bundle.js           SOURCE for the Reown AppKit wrapper (window.CSDONAppKit)
 blocks/donation/                 Gutenberg block (block.json + editor script)
 build/appkit-bundle.js           BUILT wallet bundle (committed; ships in releases)
 languages/                       Translation template (.pot)
@@ -44,7 +44,7 @@ npm install        # installs the exact pinned versions from package.json
 npm run build      # regenerates build/appkit-bundle.js
 ```
 
-`vite.config.js` produces a single self-contained IIFE that assigns `window.CSDAppKit`, with Buffer/process/global polyfills injected by `vite-plugin-node-polyfills`.
+`vite.config.js` produces a single self-contained IIFE that assigns `window.CSDONAppKit`, with Buffer/process/global polyfills injected by `vite-plugin-node-polyfills`.
 
 The committed bundle was built with `@reown/appkit` 1.8.21 (+ matching ethers/solana/bitcoin adapters), `@solana/web3.js` 1.98.4, `@solana/spl-token` 0.4.14, `ethers` 6.17.0, Vite 5.4.21. Keep the four `@reown/appkit*` packages on the same version. If you bump the AppKit **major**, re-verify the calls listed below.
 
@@ -68,7 +68,7 @@ phpcs --standard=phpcs.xml.dist .
 
 Also run the official **Plugin Check** plugin in a WordPress install before opening a PR that touches PHP.
 
-- Prefix everything with `csd_` / `CSD_`.
+- Prefix everything with `csdon_` / `CSDON_` (WordPress.org requires a distinctive prefix of at least four characters).
 - Escape on output (`esc_html`, `esc_attr`, `esc_url`), sanitize on input, verify nonces, check `manage_options`.
 - Keep all user-facing strings translatable with the `cryptostack-donations` text domain.
 

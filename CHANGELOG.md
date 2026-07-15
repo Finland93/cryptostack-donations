@@ -5,6 +5,25 @@ All notable changes to this project are documented here. The format is based on
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Renamed the global prefix from `csd`/`CSD` to `csdon`/`CSDON` across constants,
+  classes, functions, hooks, the option key, CSS classes/variables and JS globals,
+  to meet the WordPress.org four-character prefix requirement. The include files
+  were renamed to match (`includes/class-csdon-*.php`).
+- Donation amounts are now entered in each asset's own units (BTC, ETH, SOL,
+  USDC...) instead of USD.
+
+### Removed
+- The CoinGecko live-pricing request from the frontend. The plugin no longer
+  contacts any pricing service, so no visitor data leaves the site without the
+  visitor initiating a wallet action.
+- An incorrect readme reference to a paid "Pro" version. No paid version exists
+  and none is planned.
+
+### Added
+- An `== External services ==` section in `readme.txt` documenting the
+  Reown/WalletConnect endpoints, the Coinbase Wallet SDK and the public Solana
+  RPC, each with Terms of Service and Privacy Policy links.
 
 ## [0.1.0] - 2026-06-29
 ### Added

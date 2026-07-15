@@ -32,16 +32,18 @@ Donations go **straight on-chain to the addresses you configure**. The plugin is
 
 = How donors pay =
 
-The donor connects any WalletConnect-compatible wallet (via Reown AppKit), chooses a network and amount, and confirms in their wallet. Depending on chain and wallet support, the donation and the platform fee are sent either in a single batched transaction or as two clearly labelled transactions.
+The donor connects any WalletConnect-compatible wallet (via Reown AppKit), chooses a network, enters an amount in that asset's own units (for example BTC, ETH, SOL or USDC), and confirms in their wallet. Depending on chain and wallet support, the donation and the platform fee are sent either in a single batched transaction or as two clearly labelled transactions.
 
 = Platform fee (please read) =
 
-This plugin includes a **1% platform fee** that helps fund ongoing development. It is sent on-chain, in the same flow as the donation, to the plugin maintainer's wallets. You choose how it is applied:
+This plugin is free and always will be. There is no paid version, no "Pro" edition, no license key, no trial period, and no account to register. Every feature the plugin has is available to every user, permanently.
+
+It is funded by a **1% platform fee** on donations, in the same way a payment processor keeps a percentage of what it moves. The fee is sent on-chain, in the same flow as the donation, to the maintainer's wallets (they are listed in plain sight in `includes/config.php`). You choose how it applies:
 
 * **Inclusive** — the fee is taken from the donation amount (the recipient receives 99%).
 * **On top** — the donor pays an extra 1% so the recipient receives 100%.
 
-The fee is always visible to the donor in their wallet before they sign, because they can see exactly which addresses receive funds. Nothing is hidden. This fee and its destination are disclosed here and in the plugin settings.
+Nothing is hidden and nothing is locked. The fee is disclosed here, on the plugin's settings screen, and — most importantly — the donor sees every single receiving address in their own wallet before they sign anything. If you would rather not have the fee, the plugin is GPL: you are free to fork it and change it. Nothing in the code stops you.
 
 = WalletConnect / Reown Project ID =
 
@@ -92,9 +94,34 @@ It happens automatically. Every time you click **Save settings**, your wallet ad
 
 They are removed. Deleting (uninstalling) the plugin clears its stored settings, including your wallet addresses, from the site. Simply deactivating the plugin keeps them so you can reactivate later.
 
+= Is there a paid or Pro version? =
+
+No, and there never will be. This is the whole plugin. Nothing is held back, nothing is locked, and no feature requires a payment or an upgrade to use. The 1% fee is simply how the free plugin is paid for.
+
 = Can I remove the 1% fee? =
 
-The fee funds development of the free plugin. You can choose whether it comes out of the donation (inclusive) or is added on top so your cause still receives 100%. A separate Pro version with a 0% fee and additional features may be offered outside the WordPress.org directory.
+Not from the settings — it is how development is funded, and it applies to everyone equally. But the plugin is licensed GPLv2 or later, so you are entirely free to fork the code and modify it as you see fit. There is no license check, no phone-home, and no mechanism that disables the plugin if you do.
+
+== External services ==
+
+This plugin connects to third-party services to make wallet connections and on-chain transfers work. Nothing is sent until a visitor actively chooses to connect a wallet or send a donation. The plugin performs no background tracking and sends no data to the plugin developer.
+
+**WalletConnect / Reown (Reown AppKit)**
+Wallet connectivity is provided by the WalletConnect protocol through Reown AppKit. When a visitor clicks "Connect wallet", and while a wallet session is active, the bundled AppKit code contacts Reown / WalletConnect endpoints — including relay.walletconnect.org, pulse.walletconnect.org, api.web3modal.org, rpc.walletconnect.org, verify.walletconnect.com, verify.walletconnect.org and echo.walletconnect.com — to establish and maintain the encrypted wallet session, resolve wallet metadata, and route blockchain RPC requests. The data involved includes your WalletConnect Project ID, the selected chain, wallet/session metadata and, once connected, the visitor's public wallet address and the transaction they approve. This is required to connect wallets and cannot be performed locally by the plugin.
+Terms of service: https://reown.com/terms-of-service
+Privacy policy: https://reown.com/privacy-policy
+
+**Coinbase Wallet SDK (only if a visitor selects Coinbase Wallet)**
+If a visitor connects using Coinbase Wallet, the Coinbase Wallet SDK bundled inside Reown AppKit may contact Coinbase endpoints (for example *.cbhq.net) as part of that wallet's own connection and analytics. This happens only when the visitor chooses Coinbase Wallet.
+Privacy policy: https://www.coinbase.com/legal/privacy
+
+**Solana RPC (Solana donations only)**
+For donations on Solana, the bundled code talks to a public Solana JSON-RPC endpoint (by default api.mainnet-beta.solana.com, operated by the Solana Foundation) to read a recent blockhash and broadcast the signed transaction. The data sent is the transaction and related public on-chain information, and only when a visitor sends a Solana donation.
+Terms of service: https://solana.com/tos
+Privacy policy: https://solana.com/privacy-policy
+
+**Public blockchain networks**
+Completing any donation broadcasts a signed transaction to the relevant public blockchain (Bitcoin, an EVM network such as Ethereum, Polygon, Base or BNB Smart Chain, or Solana). On-chain transactions are public by nature. This is inherent to sending cryptocurrency and is not optional once a donor confirms a transfer.
 
 == Screenshots ==
 
@@ -103,7 +130,7 @@ The fee funds development of the free plugin. You can choose whether it comes ou
 == Changelog ==
 
 = 0.1.0 =
-* Initial release: Bitcoin, EVM (Ethereum, Polygon, Base, BNB) and Solana donations via WalletConnect / Reown AppKit. Block, shortcode and widget. Curated stablecoin allow-list, address locking, light/dark themes, and configurable platform fee mode.
+* Initial release: Bitcoin, EVM (Ethereum, Polygon, Base, BNB) and Solana donations via WalletConnect / Reown AppKit. Block, shortcode and widget. Curated stablecoin allow-list, address locking, light/dark themes. Donation amounts are entered in each asset's native units. Configurable platform fee mode (inclusive / on top).
 
 == Upgrade Notice ==
 

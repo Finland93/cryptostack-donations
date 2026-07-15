@@ -6,8 +6,9 @@
 		The authoritative gate for WordPress.org is the official Plugin Check,
 		which runs in CI (.github/workflows/ci.yml). This config keeps the useful
 		correctness/security/i18n sniffs and drops the purely cosmetic
-		whitespace-alignment rules and the prefix-length opinion (the codebase is
-		consistently prefixed with csd/CSD, which Plugin Check accepts).
+		whitespace-alignment rules. The prefix sniff is ENABLED: everything is
+		prefixed csdon/CSDON (5 chars), which satisfies the WordPress.org
+		four-character minimum.
 	</description>
 
 	<file>.</file>
@@ -31,8 +32,15 @@
 		<exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
 		<exclude name="WordPress.Arrays.ArrayDeclarationSpacing"/>
 		<exclude name="WordPress.WhiteSpace.PrecisionAlignment"/>
-		<!-- Short-prefix opinion; code is consistently prefixed and Plugin Check accepts it. -->
-		<exclude name="WordPress.NamingConventions.PrefixAllGlobals"/>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="csdon"/>
+				<element value="CSDON"/>
+			</property>
+		</properties>
 	</rule>
 
 	<rule ref="WordPress.WP.I18n">

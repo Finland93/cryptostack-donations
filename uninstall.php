@@ -15,19 +15,19 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-// Keep this in sync with CSD_OPTION_KEY in the main plugin file.
-delete_option( 'csd_settings' );
+// Keep this in sync with CSDON_OPTION_KEY in the main plugin file.
+delete_option( 'csdon_settings' );
 
 // Clean up transients used for admin notices.
-delete_transient( 'csd_admin_error' );
+delete_transient( 'csdon_admin_error' );
 
 // Multisite: remove the option on every site in the network.
 if ( is_multisite() ) {
 	$site_ids = get_sites( array( 'fields' => 'ids' ) );
 	foreach ( (array) $site_ids as $site_id ) {
 		switch_to_blog( (int) $site_id );
-		delete_option( 'csd_settings' );
-		delete_transient( 'csd_admin_error' );
+		delete_option( 'csdon_settings' );
+		delete_transient( 'csdon_admin_error' );
 		restore_current_blog();
 	}
 }

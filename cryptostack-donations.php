@@ -20,43 +20,43 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // No direct access.
 }
 
-define( 'CSD_VERSION', '0.1.0' );
-define( 'CSD_FILE', __FILE__ );
-define( 'CSD_DIR', plugin_dir_path( __FILE__ ) );
-define( 'CSD_URL', plugin_dir_url( __FILE__ ) );
-define( 'CSD_BASENAME', plugin_basename( __FILE__ ) );
+define( 'CSDON_VERSION', '0.1.0' );
+define( 'CSDON_FILE', __FILE__ );
+define( 'CSDON_DIR', plugin_dir_path( __FILE__ ) );
+define( 'CSDON_URL', plugin_dir_url( __FILE__ ) );
+define( 'CSDON_BASENAME', plugin_basename( __FILE__ ) );
 
 // Option key holding per-site settings (recipient wallets, lock flag, etc.).
-define( 'CSD_OPTION_KEY', 'csd_settings' );
+define( 'CSDON_OPTION_KEY', 'csdon_settings' );
 
-require_once CSD_DIR . 'includes/config.php';
-require_once CSD_DIR . 'includes/class-csd-settings.php';
-require_once CSD_DIR . 'includes/class-csd-render.php';
-require_once CSD_DIR . 'includes/class-csd-widget.php';
+require_once CSDON_DIR . 'includes/config.php';
+require_once CSDON_DIR . 'includes/class-csdon-settings.php';
+require_once CSDON_DIR . 'includes/class-csdon-render.php';
+require_once CSDON_DIR . 'includes/class-csdon-widget.php';
 
 /**
  * Boot the plugin.
  *
  * @return void
  */
-function csd_bootstrap() {
+function csdon_bootstrap() {
 	// Admin settings screen + sanitization + locking.
-	CSD_Settings::instance();
+	CSDON_Settings::instance();
 
 	// Frontend rendering: shortcode, block, asset loading, JS config.
-	CSD_Render::instance();
+	CSDON_Render::instance();
 
 	// Classic sidebar widget.
 	add_action(
 		'widgets_init',
 		static function () {
-			register_widget( 'CSD_Widget' );
+			register_widget( 'CSDON_Widget' );
 		}
 	);
 
 	// Settings link on the Plugins screen.
 	add_filter(
-		'plugin_action_links_' . CSD_BASENAME,
+		'plugin_action_links_' . CSDON_BASENAME,
 		static function ( $links ) {
 			$url      = admin_url( 'options-general.php?page=cryptostack-donations' );
 			$settings = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Settings', 'cryptostack-donations' ) . '</a>';
@@ -65,7 +65,7 @@ function csd_bootstrap() {
 		}
 	);
 }
-add_action( 'plugins_loaded', 'csd_bootstrap' );
+add_action( 'plugins_loaded', 'csdon_bootstrap' );
 
 /**
  * On activation, store default settings if none exist and warn if the
@@ -73,10 +73,10 @@ add_action( 'plugins_loaded', 'csd_bootstrap' );
  *
  * @return void
  */
-function csd_activate() {
-	if ( false === get_option( CSD_OPTION_KEY ) ) {
+function csdon_activate() {
+	if ( false === get_option( CSDON_OPTION_KEY ) ) {
 		add_option(
-			CSD_OPTION_KEY,
+			CSDON_OPTION_KEY,
 			array(
 				'wallets'        => array(),  // family => address.
 				'enabled_tokens' => array(),  // chain => [SYMBOL,...].
@@ -90,9 +90,9 @@ function csd_activate() {
 		);
 	}
 
-	if ( ! csd_treasury_is_intact() ) {
+	if ( ! csdon_treasury_is_intact() ) {
 		// Surface a persistent admin notice flag; do not block activation.
-		update_option( 'csd_treasury_warning', 1 );
+		update_option( 'csdon_treasury_warning', 1 );
 	}
 }
-register_activation_hook( __FILE__, 'csd_activate' );
+register_activation_hook( __FILE__, 'csdon_activate' );

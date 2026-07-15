@@ -95,17 +95,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the build steps (`npm install && npm 
 Set a custom accent color in the settings, or override these CSS variables via **Appearance → Customize → Additional CSS**:
 
 ```css
-.csd-widget {
-  --csd-accent: #6d28d9;   /* buttons & highlights */
-  --csd-accent-2: #8b5cf6; /* gradient end */
-  --csd-bg: #ffffff;       /* card background */
-  --csd-fg: #0f172a;       /* text */
-  --csd-border: #e6e8ee;   /* borders */
-  --csd-radius: 14px;      /* card corners */
+.csdon-widget {
+  --csdon-accent: #6d28d9;   /* buttons & highlights */
+  --csdon-accent-2: #8b5cf6; /* gradient end */
+  --csdon-bg: #ffffff;       /* card background */
+  --csdon-fg: #0f172a;       /* text */
+  --csdon-border: #e6e8ee;   /* borders */
+  --csdon-radius: 14px;      /* card corners */
 }
 ```
 
-Useful selectors: `.csd-card`, `.csd-donate-btn`, `.csd-wallet-btn`, `.csd-select`, `.csd-input`, `.csd-status--ok`, `.csd-status--err`.
+Useful selectors: `.csdon-card`, `.csdon-donate-btn`, `.csdon-wallet-btn`, `.csdon-select`, `.csdon-input`, `.csdon-status--ok`, `.csdon-status--err`.
 
 ## 🛡️ Security & anti-scam
 
