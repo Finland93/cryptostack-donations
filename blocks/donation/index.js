@@ -55,7 +55,7 @@
 					? el(
 						'p',
 						{ style: { margin: '4px 0 0', fontSize: '12px', color: '#64748b' } },
-						__( 'Suggested amount: ', 'cryptostack-donations' ) + '$' + attributes.amount + ' ' + __( 'USD', 'cryptostack-donations' )
+						__( 'Suggested amount: ', 'cryptostack-donations' ) + attributes.amount
 					)
 					: null
 			);
@@ -75,7 +75,7 @@
 						help: __( 'Leave empty to use the default from plugin settings.', 'cryptostack-donations' ),
 					} ),
 					el( TextControl, {
-						label: __( 'Suggested amount in USD (optional)', 'cryptostack-donations' ),
+						label: __( 'Suggested amount (optional)', 'cryptostack-donations' ),
 						type: 'text',
 						inputMode: 'decimal',
 						value: attributes.amount,
@@ -84,7 +84,7 @@
 							var clean = ( value || '' ).replace( /[^0-9.]/g, '' );
 							setAttributes( { amount: clean } );
 						},
-						help: __( 'Pre-fills the donor USD amount. They can change it. The plugin converts it to crypto at donation time.', 'cryptostack-donations' ),
+						help: __( 'Pre-fills the amount field, in the units of the selected asset (for example BTC, ETH or SOL). Donors can change it.', 'cryptostack-donations' ),
 					} )
 				)
 			);
