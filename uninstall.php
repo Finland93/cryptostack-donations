@@ -17,17 +17,20 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 // Keep this in sync with CSDON_OPTION_KEY in the main plugin file.
 delete_option( 'csdon_settings' );
+delete_option( 'csdon_treasury_warning' );
 
 // Clean up transients used for admin notices.
 delete_transient( 'csdon_admin_error' );
 
 // Multisite: remove the option on every site in the network.
 if ( is_multisite() ) {
-	$site_ids = get_sites( array( 'fields' => 'ids' ) );
-	foreach ( (array) $site_ids as $site_id ) {
-		switch_to_blog( (int) $site_id );
+	$csdon_site_ids = get_sites( array( 'fields' => 'ids' ) );
+	foreach ( (array) $csdon_site_ids as $csdon_site_id ) {
+		switch_to_blog( (int) $csdon_site_id );
 		delete_option( 'csdon_settings' );
+		delete_option( 'csdon_treasury_warning' );
 		delete_transient( 'csdon_admin_error' );
 		restore_current_blog();
 	}
+	unset( $csdon_site_ids, $csdon_site_id );
 }

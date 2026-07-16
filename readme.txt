@@ -107,12 +107,15 @@ Not from the settings — it is how development is funded, and it applies to eve
 This plugin connects to third-party services to make wallet connections and on-chain transfers work. Nothing is sent until a visitor actively chooses to connect a wallet or send a donation. The plugin performs no background tracking and sends no data to the plugin developer.
 
 **WalletConnect / Reown (Reown AppKit)**
-Wallet connectivity is provided by the WalletConnect protocol through Reown AppKit. When a visitor clicks "Connect wallet", and while a wallet session is active, the bundled AppKit code contacts Reown / WalletConnect endpoints — including relay.walletconnect.org, pulse.walletconnect.org, api.web3modal.org, rpc.walletconnect.org, verify.walletconnect.com, verify.walletconnect.org and echo.walletconnect.com — to establish and maintain the encrypted wallet session, resolve wallet metadata, and route blockchain RPC requests. The data involved includes your WalletConnect Project ID, the selected chain, wallet/session metadata and, once connected, the visitor's public wallet address and the transaction they approve. This is required to connect wallets and cannot be performed locally by the plugin.
+Wallet connectivity is provided by the WalletConnect protocol through Reown AppKit. When a visitor clicks "Connect wallet", and while a wallet session is active, the bundled AppKit code contacts Reown / WalletConnect endpoints — including relay.walletconnect.org, pulse.walletconnect.org, api.web3modal.org, rpc.walletconnect.org, verify.walletconnect.com, verify.walletconnect.org, echo.walletconnect.com, secure.walletconnect.org and fonts.reown.com — to establish and maintain the encrypted wallet session, resolve wallet metadata, load the modal's interface assets, and route blockchain RPC requests. The data involved includes your WalletConnect Project ID, the selected chain, wallet/session metadata and, once connected, the visitor's public wallet address and the transaction they approve. This is required to connect wallets and cannot be performed locally by the plugin.
 Terms of service: https://reown.com/terms-of-service
 Privacy policy: https://reown.com/privacy-policy
 
+Note: the bundled AppKit library also contains static connection metadata (RPC and block-explorer URLs) for many other blockchain networks. Only the networks listed in this readme are enabled by this plugin, so those other endpoints are never used or contacted.
+
 **Coinbase Wallet SDK (only if a visitor selects Coinbase Wallet)**
-If a visitor connects using Coinbase Wallet, the Coinbase Wallet SDK bundled inside Reown AppKit may contact Coinbase endpoints (for example *.cbhq.net) as part of that wallet's own connection and analytics. This happens only when the visitor chooses Coinbase Wallet.
+If a visitor connects using Coinbase Wallet, the Coinbase Wallet SDK bundled inside Reown AppKit may contact Coinbase endpoints (for example *.cbhq.net, cca-lite.coinbase.com or keys.coinbase.com) as part of that wallet's own connection and analytics. This happens only when the visitor chooses Coinbase Wallet.
+Terms of service: https://www.coinbase.com/legal/user_agreement
 Privacy policy: https://www.coinbase.com/legal/privacy
 
 **Solana RPC (Solana donations only)**
