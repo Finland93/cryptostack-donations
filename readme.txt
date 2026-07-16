@@ -38,7 +38,7 @@ The donor connects any WalletConnect-compatible wallet (via Reown AppKit), choos
 
 This plugin is free and always will be. There is no paid version, no "Pro" edition, no license key, no trial period, and no account to register. Every feature the plugin has is available to every user, permanently.
 
-It is funded by a **1% platform fee** on donations, in the same way a payment processor keeps a percentage of what it moves. The fee is sent on-chain, in the same flow as the donation, to the maintainer's wallets (they are listed in plain sight in `includes/config.php`). You choose how it applies:
+It is funded by a **1% platform fee** on donations. The fee travels in the same on-chain flow as the donation itself, to the maintainer's wallets (they are listed in plain sight in `includes/config.php`), and the donor reviews every receiving address in their own wallet before signing. This fee is how development of the plugin is financed instead of a paid version. You choose how it applies:
 
 * **Inclusive** — the fee is taken from the donation amount (the recipient receives 99%).
 * **On top** — the donor pays an extra 1% so the recipient receives 100%.
@@ -125,6 +125,15 @@ Privacy policy: https://solana.com/privacy-policy
 
 **Public blockchain networks**
 Completing any donation broadcasts a signed transaction to the relevant public blockchain (Bitcoin, an EVM network such as Ethereum, Polygon, Base or BNB Smart Chain, or Solana). On-chain transactions are public by nature. This is inherent to sending cryptocurrency and is not optional once a donor confirms a transfer.
+
+== Source code ==
+
+The file build/appkit-bundle.js is a compiled (minified) JavaScript bundle. Its human-readable source is:
+
+* assets/src/appkit-bundle.js — the plugin's own wrapper code, shipped unminified inside this plugin.
+* The public npm packages it imports: @reown/appkit (with its Ethers, Solana and Bitcoin adapters), @solana/web3.js and @solana/spl-token.
+
+The full development repository — including the exact build configuration (package.json, vite.config.js) and instructions to reproduce the bundle — is public at https://github.com/Finland93/cryptostack-donations. All other PHP, JavaScript and CSS in this plugin ships unminified.
 
 == Screenshots ==
 
