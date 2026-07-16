@@ -28,8 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Platform fee, expressed in basis points. 100 bps = 1.00%.
  *
- * This is how the free plugin is funded, in the same way a payment processor
- * takes a percentage. It is NOT trialware: there is no paid version, no
+ * This is how development of the free plugin is funded. It is NOT
+ * trialware: there is no paid version, no
  * license key, no trial period, and no functionality anywhere in this plugin
  * is locked, limited, or unlocked by any payment or upgrade. Every feature is
  * available to every user, forever. The fee is disclosed in readme.txt and on
