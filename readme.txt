@@ -118,6 +118,11 @@ If a visitor connects using Coinbase Wallet, the Coinbase Wallet SDK bundled ins
 Terms of service: https://www.coinbase.com/legal/user_agreement
 Privacy policy: https://www.coinbase.com/legal/privacy
 
+**mempool.space (Bitcoin donations only)**
+For donations on Bitcoin, the Bitcoin adapter bundled inside Reown AppKit queries the mempool.space API (operated by The Mempool Open Source Project; the Testnet variant of the endpoint is used on Bitcoin Testnet) to look up the unspent transaction outputs (UTXOs) available at the donor's address, which is required to construct a valid Bitcoin transaction. The data sent is the donor's public Bitcoin address, and only when a visitor sends a Bitcoin donation.
+Terms of service: https://mempool.space/terms-of-service
+Privacy policy: https://mempool.space/privacy-policy
+
 **Solana RPC (Solana donations only)**
 For donations on Solana, the bundled code talks to a public Solana JSON-RPC endpoint (by default api.mainnet-beta.solana.com, operated by the Solana Foundation) to read a recent blockhash and broadcast the signed transaction. The data sent is the transaction and related public on-chain information, and only when a visitor sends a Solana donation.
 Terms of service: https://solana.com/tos
