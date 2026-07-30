@@ -19,7 +19,7 @@
 
 ---
 
-CryptoStack Donations adds a modern **"Connect wallet"** donation button to any WordPress site. Visitors connect any WalletConnect-compatible wallet (via [Reown AppKit](https://reown.com/appkit)), pick a network and amount, and the donation goes **straight on-chain to the wallets you configure**. There is no account, no KYC, and no third-party processor — the plugin never holds funds.
+CryptoStack Donations adds a modern **"Connect wallet"** donation button to any WordPress site. Visitors connect any WalletConnect-compatible wallet (via [Reown AppKit](https://reown.com/appkit)), pick a network and amount, and the donation goes **straight on-chain to the wallets you configure**. There is no account, no KYC, and no third-party processor — the plugin never holds funds. [Now available on WordPress plugins](https://wordpress.org/plugins/cryptostack-donations)
 
 <p align="center">
   <img src=".github/assets/preview.png" alt="Widget preview in light and dark themes" width="80%">
