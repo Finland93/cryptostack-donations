@@ -67,7 +67,7 @@ You choose whether the fee is **inclusive** (taken from the amount, recipient ge
 Once published: search for **CryptoStack Donations** under **Plugins → Add New**, install, and activate. *(Listing pending review.)*
 
 ### From a release `.zip`
-1. Download the latest `cryptostack-donations.zip` from [Releases](https://github.com/Finland93/cryptostack-donations/releases).
+1. Download the latest version from [WordPress Plugins](https://wordpress.org/plugins/cryptostack-donations/).
 2. In WordPress: **Plugins → Add New → Upload Plugin**, choose the zip, install, activate.
 
 > The release zip ships with the wallet bundle pre-built — **no Node/CLI required** to install or use.
