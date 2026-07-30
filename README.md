@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Accept Bitcoin, Ethereum and Solana donations on WordPress with one WalletConnect button.</strong><br>
-  Non-custodial · no smart contracts · a transparent 1% keeps the plugin free. [Now available on WordPress.org](https://wordpress.org/plugins/cryptostack-donations)
+  Non-custodial · no smart contracts · a transparent 1% keeps the plugin free. 
 </p>
 
 <p align="center">
